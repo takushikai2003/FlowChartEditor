@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>教育用フローチャートエディタ</title>
+  <link rel="stylesheet" href="./toolbar.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div id="toolbar">
+    <button id="add_start">開始</button>
+    <button id="add_end">終了</button>
+    <button id="add_io">入出力</button>
+    <button id="add_process">処理</button>
+    <button id="add_decision">分岐</button>
+    <button id="add_loop">ループ</button>
+    <button id="save_file">保存</button>
+    <input id="load_file" type="file"/>
+</div>
+
+<div id="canvas">
+  <svg id="lines">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#000"/>
+      </marker>
+    </defs>
+  </svg>
+</div>
+
+<script type="module" src="./main.js"></script>
+
+</body>
+</html>

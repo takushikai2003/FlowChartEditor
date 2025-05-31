@@ -1,0 +1,142 @@
+body { margin: 0; font-family: sans-serif; }
+
+#canvas {
+    position: relative;
+    width: 100vw;
+    height: 90vh;
+    background: #fafafa;
+    border: 1px solid #ccc;
+    overflow: hidden;
+}
+
+
+.node {
+    position: absolute;
+    width: 150px;
+    height: 90px;
+    /* padding: 10px 10px; */
+}
+.shape{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border: 2px solid #444;
+    /* padding: 10px 10px; */
+    /* background: white; */
+    cursor: move;
+    user-select: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* .terminal { border-radius: 25px; background: #d0f0d0; } */
+.start { border-radius: 25px; background: #d0f0d0; }
+.end { border-radius: 25px; background: #d0f0d0; }
+.io { width: 80%;transform: skewX(-20deg); background: #d0d0f0; }
+.process { background: #f0d0d0; }
+.decision {
+    width: 100px;
+    height: 100px;
+    background: #fff2cc;
+    transform: rotate(-45deg) skew(20deg, 20deg);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.decision span {
+    position: absolute;
+    transform: skew(-20deg, -20deg) rotate(45deg); 
+}
+.loop { background: #ffe0e0; border-style: dashed; }
+
+
+.from-point {
+    position: absolute;
+    bottom: 0%;
+    left: 10%;
+    width: 80%;
+    height: 20%;
+    background: #f00;
+    cursor: pointer;
+}
+
+.to-point {
+    position: absolute;
+    top:0%;
+    left: 10%;
+    width: 80%;
+    height: 20%;
+    background: blue;
+    cursor: pointer;
+}
+
+
+.decision .point-wrapper{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* transform:scale(3, 3); */
+}
+
+/* No */
+.from-point-no {
+    position: absolute;
+    top: calc(50% - 25px);
+    right: -10%;
+    width: 50px;
+    height: 50px;
+    background: tomato;
+    cursor: pointer;
+}
+/* .from-point-no:hover {
+    background: tomato;
+} */
+
+/* Yes */
+.from-point-yes {
+    position: absolute;
+    bottom: -30%;
+    left: calc(50% - 50px);
+    width: 50px;
+    height: 50px;
+    background: darkseagreen;
+    cursor: pointer;
+}
+/* .from-point-yes:hover {
+    background: darkseagreen;
+} */
+
+.to-point-decision {
+    position: absolute;
+    top:-10%;
+    left: calc(50% - 50px);
+    width: 50px;
+    height: 50px;
+    background: blue;
+    cursor: pointer;
+}
+
+
+/* Yes/Noラベル */
+.yes-label{
+    position: absolute;
+    bottom: -30%;
+    left: 50%;
+}
+.no-label{
+    position: absolute;
+    bottom: 50%;
+    right: -20%;
+}
+
+
+svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+}
