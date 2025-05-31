@@ -6,6 +6,7 @@ const lines = document.getElementById('lines');
 
 let dragging = null;
 let connectFrom = null;
+let connectTo = null;
 
 export function addNode(type) {
   const id = 'node-' + Date.now();
@@ -15,7 +16,8 @@ export function addNode(type) {
     io: '入出力',
     process: '雨が降ったら傘をさす',
     decision: '分岐あああああああああ',
-    loop: 'ループ'
+    loop_start: 'ループ始端',
+    loop_end: 'ループ終端'
   };
 
   const node = document.createElement('div');
@@ -48,6 +50,18 @@ export function addNode(type) {
         const toPoint = document.createElement('div');
         toPoint.className = 'to-point-decision';
         pointWrapper.appendChild(toPoint);
+        toPoint.addEventListener("mousedown",()=>{
+            connectTo = toPoint;
+            if (connectFrom) {
+                const from = connectFrom.dataset.id;
+                const to = toPoint.parentNode.parentNode.dataset.id;
+                if (!state.edges.find(e => e.from === from && e.to === to)) {
+                    state.edges.push({ from, to });
+                }
+                connectFrom = null;
+                renderLines();
+            }
+        });
 
 
         // YesとNoの文字
@@ -71,20 +85,35 @@ export function addNode(type) {
         if(type == "start"){
             const fromPoint = document.createElement('div');
             fromPoint.className = 'from-point';
-            pointWrapper.appendChild(fromPoint);
+            shape.appendChild(fromPoint);
+            fromPoint.addEventListener("mousedown",()=> {
+                connectFrom = fromPoint;
+                console.log("connectFrom", connectFrom);
+            });
         }
         else if(type == "end"){
             const toPoint = document.createElement('div');
             toPoint.className = 'to-point';
-            pointWrapper.appendChild(toPoint);
+            shape.appendChild(toPoint);
+            toPoint.addEventListener("mousedown",()=>{
+                connectTo = toPoint;
+                if (connectFrom) {
+                    console.log("connectTo", connectTo);
+                    const from = connectFrom.dataset.id;
+                    const to = toPoint.parentNode.parentNode.dataset.id;
+                    renderLines();
+                    connectFrom = null;
+                    connectTo = null;
+                }
+            });
         }
         else{
             const fromPoint = document.createElement('div');
             fromPoint.className = 'from-point';
-            pointWrapper.appendChild(fromPoint);
+            shape.appendChild(fromPoint);
             const toPoint = document.createElement('div');
             toPoint.className = 'to-point';
-            pointWrapper.appendChild(toPoint);
+            shape.appendChild(toPoint);
         }
     
   }
@@ -101,36 +130,38 @@ export function addNode(type) {
 
 
 
-function bindNodeEvents(div) {
-    div.onmousedown = e => {
-        dragging = div;
+function bindNodeEvents(node) {
+    node.onmousedown = e => {
+        dragging = node;
         offset.x = e.offsetX;
         offset.y = e.offsetY;
     };
 
-    console.log(state)
+    console.log(state);
 
-    div.onmouseup = e => {
-        if (connectFrom && connectFrom !== div) {
-            const from = connectFrom.dataset.id;
-            const to = div.dataset.id;
-            if (!state.edges.find(e => e.from === from && e.to === to)) {
-                state.edges.push({ from, to });
-            }
-            connectFrom = null;
-            renderLines();
-        }
-        else {
-            connectFrom = div;
-        }
-    };
+    // if(node.)
 
-    div.oncontextmenu = e => {
+    // div.onmouseup = e => {
+    //     if (connectFrom && connectFrom !== div) {
+    //         const from = connectFrom.dataset.id;
+    //         const to = div.dataset.id;
+    //         if (!state.edges.find(e => e.from === from && e.to === to)) {
+    //             state.edges.push({ from, to });
+    //         }
+    //         connectFrom = null;
+    //         renderLines();
+    //     }
+    //     else {
+    //         connectFrom = div;
+    //     }
+    // };
+
+    node.oncontextmenu = e => {
         e.preventDefault();
-        const id = div.dataset.id;
+        const id = node.dataset.id;
         state.nodes = state.nodes.filter(n => n.id !== id);
         state.edges = state.edges.filter(e => e.from !== id && e.to !== id);
-        div.remove();
+        node.remove();
         renderLines();
     };
 }

@@ -12,8 +12,10 @@ document.getElementById("add_process")
 .addEventListener("click", () => addNode('process'));
 document.getElementById("add_decision")
 .addEventListener("click", () => addNode('decision'));
-document.getElementById("add_loop")
-.addEventListener("click", () => addNode('loop'));
+document.getElementById("add_loop_start")
+.addEventListener("click", () => addNode('loop_start'));
+document.getElementById("add_loop_end")
+.addEventListener("click", () => addNode('loop_end'));
 
 document.getElementById("save_file")
 .addEventListener("click", () => {
@@ -26,6 +28,6 @@ document.getElementById("load_file")
 
 
 // てすとこーど
-addNode("process");
-addNode("io");
-addNode("decision");
+// addNode("process");
+// addNode("io");
+// addNode("decision");

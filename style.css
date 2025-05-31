@@ -51,7 +51,16 @@ body { margin: 0; font-family: sans-serif; }
     position: absolute;
     transform: skew(-20deg, -20deg) rotate(45deg); 
 }
-.loop { background: #ffe0e0; border-style: dashed; }
+.loop_start {
+    border-radius: 25px 25px 0 0;
+    background: #ffe0e0;
+    border-style: dashed;
+}
+.loop_end {
+    border-radius: 0 0 25px 25px;
+    background: #ffe0e0;
+    border-style: dashed;
+}
 
 
 .from-point {
