@@ -69,7 +69,7 @@ body { margin: 0; font-family: sans-serif; }
     left: 10%;
     width: 80%;
     height: 20%;
-    background: #f00;
+    /* background: #f00; */
     cursor: pointer;
 }
 
@@ -79,7 +79,7 @@ body { margin: 0; font-family: sans-serif; }
     left: 10%;
     width: 80%;
     height: 20%;
-    background: blue;
+    /* background: blue; */
     cursor: pointer;
 }
 
@@ -98,7 +98,7 @@ body { margin: 0; font-family: sans-serif; }
     right: -10%;
     width: 50px;
     height: 50px;
-    background: tomato;
+    /* background: tomato; */
     cursor: pointer;
 }
 /* .from-point-no:hover {
@@ -112,7 +112,7 @@ body { margin: 0; font-family: sans-serif; }
     left: calc(50% - 50px);
     width: 50px;
     height: 50px;
-    background: darkseagreen;
+    /* background: darkseagreen; */
     cursor: pointer;
 }
 /* .from-point-yes:hover {
@@ -125,7 +125,7 @@ body { margin: 0; font-family: sans-serif; }
     left: calc(50% - 50px);
     width: 50px;
     height: 50px;
-    background: blue;
+    /* background: blue; */
     cursor: pointer;
 }
 
