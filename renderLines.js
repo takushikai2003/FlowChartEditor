@@ -47,19 +47,43 @@ export function renderLines() {
 		// ノードの種類によって線の引き方を変える
 		// Noから出る線は、まず横向きになるように引き、次に縦方向に矢印を引く
 		if(fromEl.classList.contains("from-point-no")){
-			const x1 = fromRect.left + fromRect.width - canvasRect.left;
-			const y1 = fromRect.top + fromRect.height/2 - canvasRect.top;
-			const x2 = toRect.left + toRect.width / 2 - canvasRect.left;
-			const y2 = toRect.top - canvasRect.top;
-			const midX = (x1 + x2) / 2;
-			const midY = (y1 + y2) / 2;
+			// node-lineの場合は右に回る
+			if(toEl.classList.contains("line-group")){
+
+				const x1 = fromRect.left + fromRect.width - canvasRect.left;
+				const y1 = fromRect.top + fromRect.height/2 - canvasRect.top;
+				const x2 = toRect.left + toRect.width - canvasRect.left;
+				const y2 = toRect.top + toRect.height / 2 - canvasRect.top;
+				const midX = (x1 + x2) / 2;
+				const midY = (y1 + y2) / 2;
+
+				// 右に線をずらす幅
+				const right_shift = 100;
+				
+				// 水平線
+				renderLine(line_group, x1, y1, x1+right_shift, y1);
+				// 垂直線
+				renderLine(line_group, x1+right_shift, y1, x1+right_shift, y2);
+				// 水平線
+				renderArrow(line_group, x1+right_shift, y2, x2, y2);
+
+			}
+			else{
+				const x1 = fromRect.left + fromRect.width - canvasRect.left;
+				const y1 = fromRect.top + fromRect.height/2 - canvasRect.top;
+				const x2 = toRect.left + toRect.width / 2 - canvasRect.left;
+				const y2 = toRect.top - canvasRect.top;
+				const midX = (x1 + x2) / 2;
+				const midY = (y1 + y2) / 2;
+				
+				// 水平線
+				renderLine(line_group, x1, y1, x2, y1);
+				// 垂直線
+				renderArrow(line_group, x2, y1, x2, y2);
+			}
 			
-			// 水平線
-			renderLine(line_group, x1, y1, x2, y1);
-			// 垂直線
-			renderArrow(line_group, x2, y1, x2, y2);
 		}
-		// ノードから他の線に線を引くときは、右側を回って書く
+		// No意外のノードから他の線に線を引くときは、右側を回って書く
 		else if(toEl.classList.contains("line-group")){
 			// console.log("node to line-group");
 

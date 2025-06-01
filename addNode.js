@@ -11,7 +11,7 @@ const offset = { x: 0, y: 0 };
 let dragging = null;
 // let connectTo = null;
 
-export function addNode(type) {
+export function addNode(type, x=50, y=50) {
     const id = 'node-' + Date.now();
     const labels = {
         start: '開始',
@@ -100,11 +100,11 @@ export function addNode(type) {
     
     }
 
-    node.style.left = '100px';
-    node.style.top = '100px';
+    node.style.left = x + 'px';
+    node.style.top = y + 'px';
 
     canvas.appendChild(node);
-    state.nodes.push({ id, x: 100, y: 100, label: labels[type], type });
+    state.nodes.push({ id, x: x, y: y, label: labels[type], type });
 
     bindNodeEvents(node);
     renderLines();
@@ -214,9 +214,16 @@ function bindNodeEvents(node) {
         }
     }
 
+
     // 右クリックでノードを削除
     node.oncontextmenu = e => {
         e.preventDefault();
+    
+        // start,endノードは削除できない
+        if (node.dataset.type === 'start' || node.dataset.type === 'end'){
+            alert('開始ノードと終了ノードは削除できません。');
+            return;
+        }
         const id = node.dataset.id;
         state.nodes = state.nodes.filter(n => n.id !== id);
         state.edges = state.edges.filter(e => e.from !== id && e.to !== id);

@@ -2,10 +2,10 @@ import { addNode } from "./addNode.js";
 import { saveFile, loadFile } from "./fileMagager.js";
 
 
-document.getElementById("add_start")
-.addEventListener("click", () => addNode('start'));
-document.getElementById("add_end")
-.addEventListener("click", () => addNode('end'));
+// document.getElementById("add_start")
+// .addEventListener("click", () => addNode('start'));
+// document.getElementById("add_end")
+// .addEventListener("click", () => addNode('end'));
 document.getElementById("add_io")
 .addEventListener("click", () => addNode('io'));
 document.getElementById("add_process")
@@ -26,6 +26,10 @@ document.getElementById("load_file")
     loadFile(event);
 });
 
+
+// 開始・終了ノードは自動的に追加
+addNode('start', 100, 30);
+addNode('end', 100, 300);
 
 // てすとこーど
 // addNode("process");
