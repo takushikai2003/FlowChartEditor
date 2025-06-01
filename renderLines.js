@@ -61,7 +61,7 @@ export function renderLines() {
 		}
 		// ノードから他の線に線を引くときは、右側を回って書く
 		else if(toEl.classList.contains("line-group")){
-			console.log("node to line-group");
+			// console.log("node to line-group");
 
 			const x1 = fromRect.left + fromRect.width / 2 - canvasRect.left;
 			const y1 = fromRect.top + fromRect.height - canvasRect.top;
@@ -156,26 +156,26 @@ export function renderLines() {
 
 
 	lines.innerHTML = ''; // 既存の線をクリア
+	lines.appendChild(_lines);
+
 	// まず、node-nodeの線を引く
     for (const edge of state.edges) {
 		if(edge.from.includes("line-group") || edge.to.includes("line-group")) {
 			// ノードから線への接続は無視
 			continue;
 		}
-		console.log("node to node");
+		// console.log("node to node");
 		renderEdge(edge);
     }
-	lines.appendChild(_lines);
+
 	// 次に、node-edgeの線を引く
 	for (const edge of state.edges) {
 		if(edge.from.includes("line-group") || edge.to.includes("line-group")) {
-			console.log("node to edge");
+			// console.log("node to edge");
 			renderEdge(edge);
 			continue;
 		}
 	}
-	
-	lines.appendChild(_lines);
 	
 }
 
