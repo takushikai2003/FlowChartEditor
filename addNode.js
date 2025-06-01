@@ -1,4 +1,4 @@
-import { state, offset } from "./var.js";
+import { state } from "./var.js";
 import { renderLines } from "./renderLines.js";
 
 const FROM_LINE_COLOR = 'red';
@@ -6,10 +6,11 @@ const TO_LINE_COLOR = 'blue';
 
 
 const canvas = document.getElementById('canvas');
+const offset = { x: 0, y: 0 };
 
 let dragging = null;
 let connectFrom = null;
-let connectTo = null;
+// let connectTo = null;
 
 export function addNode(type) {
     const id = 'node-' + Date.now();
@@ -141,7 +142,7 @@ function bindNodeEvents(node) {
     }
     if (toPoint) {
         toPoint.onmousedown = () => {
-            connectTo = toPoint;
+            // connectTo = toPoint;
             if (connectFrom) {
                 const from = connectFrom.dataset.id;
                 const to = toPoint.dataset.id;
@@ -149,7 +150,7 @@ function bindNodeEvents(node) {
                     state.edges.push({ from, to });
                 }
                 connectFrom = null;
-                connectTo = null;
+                // connectTo = null;
                 renderLines();
             }
         };
@@ -188,7 +189,7 @@ function bindNodeEvents(node) {
     }
     if (toPointDecision) {
         toPointDecision.onmousedown = () => {
-            connectTo = toPointDecision;
+            // connectTo = toPointDecision;
             if (connectFrom) {
                 const from = connectFrom.dataset.id;
                 const to = toPointDecision.parentNode.parentNode.dataset.id;
@@ -196,7 +197,7 @@ function bindNodeEvents(node) {
                     state.edges.push({ from, to });
                 }
                 connectFrom = null;
-                connectTo = null;
+                // connectTo = null;
                 renderLines();
             }
         };
@@ -242,8 +243,15 @@ canvas.onmousemove = e => {
     if (dragging) {
         const id = dragging.dataset.id;
         const node = state.nodes.find(n => n.id === id);
-        const x = e.clientX - canvas.offsetLeft - offset.x;
-        const y = e.clientY - canvas.offsetTop - offset.y;
+        // const x = e.clientX - canvas.offsetLeft - offset.x;
+        // const y = e.clientY - canvas.offsetTop - offset.y;
+
+        const target_rect = e.currentTarget.getBoundingClientRect();
+        const _x = e.clientX - target_rect.left;
+        const _y = e.clientY - target_rect.top;
+
+        const x = _x - offset.x;
+        const y = _y - offset.y;
         dragging.style.left = x + 'px';
         dragging.style.top = y + 'px';
         node.x = x;
