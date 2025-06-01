@@ -20,28 +20,45 @@ export function renderLines() {
         // console.log(fromEl, toEl);
         if (!fromEl || !toEl) continue;
 
-        const fromRect = fromEl.getBoundingClientRect();
-        const toRect = toEl.getBoundingClientRect();
+		const fromRect = fromEl.parentNode.parentNode.querySelector(".shape").getBoundingClientRect();
+        const toRect = toEl.parentNode.parentNode.querySelector(".shape").getBoundingClientRect();
         const canvasRect = canvas.getBoundingClientRect();
-
-        const x1 = fromRect.left + fromRect.width / 2 - canvasRect.left;
-        const y1 = fromRect.top + fromRect.height - canvasRect.top;
-        const x2 = toRect.left + toRect.width / 2 - canvasRect.left;
-        const y2 = toRect.top - canvasRect.top;
 
 		const line_group = document.createElementNS("http://www.w3.org/2000/svg", "g");
 		line_group.setAttribute("class", "line-group");
 		line_group.setAttribute("style", "pointer-events: bounding-box;");
 
-        // 階段状になるよう線を引く
-        const midX = (x1 + x2) / 2;
-        const midY = (y1 + y2) / 2;
-        // 垂直線
-        renderLine(line_group, x1, y1, x1, midY);
-        // 水平線
-        renderLine(line_group, x1, midY, x2, midY);
-        // 矢印付きの垂直線
-        renderArrow(line_group, x2, midY, x2, y2);
+		// ノードの種類によって線の引き方を変える
+		// Noから出る線は、まず横向きになるように引き、次に縦方向に矢印を引く
+		if(fromEl.classList.contains("from-point-no")){
+			const x1 = fromRect.left + fromRect.width - canvasRect.left;
+			const y1 = fromRect.top + fromRect.height/2 - canvasRect.top;
+			const x2 = toRect.left + toRect.width / 2 - canvasRect.left;
+			const y2 = toRect.top - canvasRect.top;
+			const midX = (x1 + x2) / 2;
+			const midY = (y1 + y2) / 2;
+			
+			// 水平線
+			renderLine(line_group, x1, y1, x2, y1);
+			// 垂直線
+			renderArrow(line_group, x2, y1, x2, y2);
+		}
+		// その他のノードは縦方向の階段状になるよう線を引く
+		else{
+			const x1 = fromRect.left + fromRect.width / 2 - canvasRect.left;
+			const y1 = fromRect.top + fromRect.height - canvasRect.top;
+			const x2 = toRect.left + toRect.width / 2 - canvasRect.left;
+			const y2 = toRect.top - canvasRect.top;
+			const midX = (x1 + x2) / 2;
+			const midY = (y1 + y2) / 2;
+			// 垂直線
+			renderLine(line_group, x1, y1, x1, midY);
+			// 水平線
+			renderLine(line_group, x1, midY, x2, midY);
+			// 矢印付きの垂直線
+			renderArrow(line_group, x2, midY, x2, y2);
+		}
+        
 
 		// line_group.addEventListener("click", (event) => {
 		// 	event.stopPropagation();

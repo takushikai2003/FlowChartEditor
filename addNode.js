@@ -6,7 +6,6 @@ const TO_LINE_COLOR = 'blue';
 
 
 const canvas = document.getElementById('canvas');
-const lines = document.getElementById('lines');
 
 let dragging = null;
 let connectFrom = null;
@@ -43,8 +42,8 @@ export function addNode(type) {
         node.appendChild(pointWrapper);
         // Noの点
         const fromPointNo = document.createElement('div');
-        fromPointNo.className = 'from-point-no-';
-        fromPointNo.dataset.id = 'from-point-no' + Date.now();
+        fromPointNo.className = 'from-point-no';
+        fromPointNo.dataset.id = 'from-point-no-' + Date.now();
         pointWrapper.appendChild(fromPointNo);
         // Yesの点
         const fromPointYes = document.createElement('div');
