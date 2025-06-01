@@ -1,1 +1,2 @@
 右クリックで削除
+"style", "pointer-events: bounding-box;"がsafariでは動作しない

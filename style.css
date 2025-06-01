@@ -33,6 +33,12 @@ body { margin: 0; font-family: sans-serif; }
 }
 
 /* .terminal { border-radius: 25px; background: #d0f0d0; } */
+.shape.start{
+    height: 50%;
+}
+.shape.end{
+    height: 50%;
+}
 .start { border-radius: 25px; background: #d0f0d0; }
 .end { border-radius: 25px; background: #d0f0d0; }
 .io { width: 80%;transform: skewX(-20deg); background: #d0d0f0; }
@@ -72,6 +78,9 @@ body { margin: 0; font-family: sans-serif; }
     /* background: #f00; */
     cursor: pointer;
 }
+.shape.start .from-point {
+    height: 50%;
+}
 
 .to-point {
     position: absolute;
@@ -81,6 +90,9 @@ body { margin: 0; font-family: sans-serif; }
     height: 20%;
     /* background: blue; */
     cursor: pointer;
+}
+.shape.end .to-point {
+    height: 50%;
 }
 
 

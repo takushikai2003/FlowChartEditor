@@ -44,15 +44,18 @@ export function addNode(type) {
         node.appendChild(pointWrapper);
         // Noの点
         const fromPointNo = document.createElement('div');
-        fromPointNo.className = 'from-point-no';
+        fromPointNo.className = 'from-point-no-';
+        fromPointNo.dataset.id = 'from-point-no' + Date.now();
         pointWrapper.appendChild(fromPointNo);
         // Yesの点
         const fromPointYes = document.createElement('div');
         fromPointYes.className = 'from-point-yes';
+        fromPointYes.dataset.id = 'from-point-yes-' + Date.now();
         pointWrapper.appendChild(fromPointYes);
         // 入口
         const toPoint = document.createElement('div');
         toPoint.className = 'to-point-decision';
+        toPoint.dataset.id = 'to-point-decision-' + Date.now();
         pointWrapper.appendChild(toPoint);
 
 
@@ -77,19 +80,23 @@ export function addNode(type) {
         if(type == "start"){
             const fromPoint = document.createElement('div');
             fromPoint.className = 'from-point';
+            fromPoint.dataset.id = 'from-point-' + Date.now();
             shape.appendChild(fromPoint);
         }
         else if(type == "end"){
             const toPoint = document.createElement('div');
             toPoint.className = 'to-point';
+            toPoint.dataset.id = 'to-point-' + Date.now();
             shape.appendChild(toPoint);
         }
         else{
             const fromPoint = document.createElement('div');
             fromPoint.className = 'from-point';
+            fromPoint.dataset.id = 'from-point-' + Date.now();
             shape.appendChild(fromPoint);
             const toPoint = document.createElement('div');
             toPoint.className = 'to-point';
+            toPoint.dataset.id = 'to-point-' + Date.now();
             shape.appendChild(toPoint);
         }
     
@@ -114,8 +121,6 @@ function bindNodeEvents(node) {
         offset.y = e.offsetY;
     };
 
-    console.log(state);
-
     const fromPoint = node.querySelector('.from-point');
     const toPoint = node.querySelector('.to-point');
     const fromPointNo = node.querySelector('.from-point-no');
@@ -125,10 +130,8 @@ function bindNodeEvents(node) {
     if (fromPoint) {
         fromPoint.onmousedown = () => {
             connectFrom = fromPoint;
-            console.log("connectFrom", connectFrom);
         };
         fromPoint.onmouseover = () => {
-            console.log("over fromPoint");
             fromPoint.style.backgroundColor = FROM_LINE_COLOR;
         }
         fromPoint.onmouseleave = () => {
@@ -140,7 +143,7 @@ function bindNodeEvents(node) {
             connectTo = toPoint;
             if (connectFrom) {
                 const from = connectFrom.dataset.id;
-                const to = toPoint.parentNode.parentNode.dataset.id;
+                const to = toPoint.dataset.id;
                 if (!state.edges.find(e => e.from === from && e.to === to)) {
                     state.edges.push({ from, to });
                 }
@@ -158,6 +161,8 @@ function bindNodeEvents(node) {
             toPoint.style.backgroundColor = '';
         }
     }
+
+    // 分岐の点
     if (fromPointNo) {
         fromPointNo.onmousedown = () => {
             connectFrom = fromPointNo;
@@ -219,6 +224,7 @@ function bindNodeEvents(node) {
     //     }
     // };
 
+    // 右クリックでノードを削除
     node.oncontextmenu = e => {
         e.preventDefault();
         const id = node.dataset.id;
@@ -241,7 +247,7 @@ canvas.onmousemove = e => {
         dragging.style.top = y + 'px';
         node.x = x;
         node.y = y;
-        // renderLines();
+        renderLines();
     }
 };
 canvas.onmouseup = () => dragging = null;
