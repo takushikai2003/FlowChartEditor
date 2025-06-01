@@ -9,7 +9,6 @@ const canvas = document.getElementById('canvas');
 const offset = { x: 0, y: 0 };
 
 let dragging = null;
-let connectFrom = null;
 // let connectTo = null;
 
 export function addNode(type) {
@@ -146,6 +145,8 @@ function bindNodeEvents(node) {
             if (connectFrom) {
                 const from = connectFrom.dataset.id;
                 const to = toPoint.dataset.id;
+                if(connectFrom.parentNode.parentNode === toPoint.parentNode.parentNode) return; // 同じノードへの接続は無視
+
                 if (!state.edges.find(e => e.from === from && e.to === to)) {
                     state.edges.push({ from, to });
                 }
@@ -189,10 +190,12 @@ function bindNodeEvents(node) {
     }
     if (toPointDecision) {
         toPointDecision.onmousedown = () => {
-            // connectTo = toPointDecision;
+            // connectTo = toPoint;
             if (connectFrom) {
                 const from = connectFrom.dataset.id;
-                const to = toPointDecision.parentNode.parentNode.dataset.id;
+                const to = toPointDecision.dataset.id;
+                if(connectFrom.parentNode.parentNode === toPointDecision.parentNode.parentNode) return; // 同じノードへの接続は無視
+
                 if (!state.edges.find(e => e.from === from && e.to === to)) {
                     state.edges.push({ from, to });
                 }
@@ -201,6 +204,7 @@ function bindNodeEvents(node) {
                 renderLines();
             }
         };
+
         toPointDecision.onmouseover = () => {
             if(!connectFrom) return;
             toPointDecision.style.backgroundColor = TO_LINE_COLOR;
@@ -209,22 +213,6 @@ function bindNodeEvents(node) {
             toPointDecision.style.backgroundColor = '';
         }
     }
-
-
-    // div.onmouseup = e => {
-    //     if (connectFrom && connectFrom !== div) {
-    //         const from = connectFrom.dataset.id;
-    //         const to = div.dataset.id;
-    //         if (!state.edges.find(e => e.from === from && e.to === to)) {
-    //             state.edges.push({ from, to });
-    //         }
-    //         connectFrom = null;
-    //         renderLines();
-    //     }
-    //     else {
-    //         connectFrom = div;
-    //     }
-    // };
 
     // 右クリックでノードを削除
     node.oncontextmenu = e => {
