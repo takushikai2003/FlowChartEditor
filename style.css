@@ -2,8 +2,8 @@ body { margin: 0; font-family: sans-serif; }
 
 #canvas {
     position: relative;
-    width: 100vw;
-    height: 90vh;
+    width: 200vw;
+    height: 200vh;
     background: #fafafa;
     border: 1px solid #ccc;
     overflow: hidden;

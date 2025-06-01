@@ -13,28 +13,27 @@ let connectFrom = null;
 let connectTo = null;
 
 export function addNode(type) {
-  const id = 'node-' + Date.now();
-  const labels = {
-    start: '開始',
-    end: '終了',
-    io: '入出力',
-    process: '雨が降ったら傘をさす',
-    decision: '分岐あああああああああ',
-    loop_start: 'ループ始端',
-    loop_end: 'ループ終端'
-  };
+    const id = 'node-' + Date.now();
+    const labels = {
+        start: '開始',
+        end: '終了',
+        io: '入出力',
+        process: '雨が降ったら傘をさす',
+        decision: '分岐あああああああああ',
+        loop_start: 'ループ始端',
+        loop_end: 'ループ終端'
+    };
 
-  const node = document.createElement('div');
-  node.className = 'node';
-  node.dataset.id = id;
-  node.dataset.type = type;
+    const node = document.createElement('div');
+    node.className = 'node';
+    node.dataset.id = id;
+    node.dataset.type = type;
 
-  const shape = document.createElement('div');
-  shape.className = "shape " + type;
-  node.appendChild(shape);
+    const shape = document.createElement('div');
+    shape.className = "shape " + type;
+    node.appendChild(shape);
 
-  if (type === 'decision') {
-    
+    if (type === 'decision') {
         const span = document.createElement('span');
         span.textContent = labels[type];
         shape.appendChild(span);
@@ -69,8 +68,8 @@ export function addNode(type) {
         noLabel.textContent = 'No';
         node.appendChild(noLabel);
     
-  }
-  else {
+    }
+    else {
         shape.textContent = labels[type];
 
         // const pointWrapper = document.createElement('div');
@@ -100,25 +99,28 @@ export function addNode(type) {
             shape.appendChild(toPoint);
         }
     
-  }
+    }
 
-  node.style.left = '100px';
-  node.style.top = '100px';
+    node.style.left = '100px';
+    node.style.top = '100px';
 
-  canvas.appendChild(node);
-  state.nodes.push({ id, x: 100, y: 100, label: labels[type], type });
+    canvas.appendChild(node);
+    state.nodes.push({ id, x: 100, y: 100, label: labels[type], type });
 
-  bindNodeEvents(node);
-  renderLines();
+    bindNodeEvents(node);
+    renderLines();
 }
 
 
 
 function bindNodeEvents(node) {
     node.onmousedown = e => {
+        const target_rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - target_rect.left;
+        const y = e.clientY - target_rect.top;
         dragging = node;
-        offset.x = e.offsetX;
-        offset.y = e.offsetY;
+        offset.x = x//e.offsetX;
+        offset.y = y//e.offsetY;
     };
 
     const fromPoint = node.querySelector('.from-point');
