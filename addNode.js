@@ -1,5 +1,6 @@
 import { state } from "./var.js";
 import { renderLines } from "./renderLines.js";
+import { Node } from "./class.js";
 
 const FROM_LINE_COLOR = 'red';
 const TO_LINE_COLOR = 'blue';
@@ -104,7 +105,7 @@ export function addNode(type, x=50, y=50) {
     node.style.top = y + 'px';
 
     canvas.appendChild(node);
-    state.nodes.push({ id, x: x, y: y, label: labels[type], type });
+    state.nodes.push(new Node( id, type, labels[type], x, y));
 
     bindNodeEvents(node);
     renderLines();

@@ -1,5 +1,6 @@
 import { addNode } from "./addNode.js";
 import { saveFile, loadFile } from "./fileMagager.js";
+import { compile } from "./compiler/compiler.js"
 
 
 // document.getElementById("add_start")
@@ -16,6 +17,11 @@ document.getElementById("add_loop_start")
 .addEventListener("click", () => addNode('loop_start'));
 document.getElementById("add_loop_end")
 .addEventListener("click", () => addNode('loop_end'));
+
+document.getElementById("compile")
+.addEventListener("click", () => {
+    compile();
+});
 
 document.getElementById("save_file")
 .addEventListener("click", () => {

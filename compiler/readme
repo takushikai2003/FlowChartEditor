@@ -1,0 +1,8 @@
+フローチャートのstateから疑似プログラムコードを作成する
+startからたどる
+
+【疑似プログラムコードの仕様】
+start
+if <条件function:bool>
+
+loop 3
