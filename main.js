@@ -1,6 +1,7 @@
 import { addNode } from "./addNode.js";
 import { saveFile, loadFile } from "./fileMagager.js";
-import { compile } from "./compiler/compiler.js"
+import { compile } from "./compiler/compiler.js";
+import { showModal } from "./modal.js";
 
 
 // document.getElementById("add_start")
@@ -34,8 +35,22 @@ document.getElementById("load_file")
 
 
 // 開始・終了ノードは自動的に追加
-addNode('start', 100, 30);
+const startNode = addNode('start', 100, 30);
 addNode('end', 100, 300);
+
+startNode.el.addEventListener("dblclick",async  () => {
+    const pr = document.createElement("div");
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = startNode.label;
+    pr.appendChild(input);
+    input.addEventListener("change", () => {
+        startNode.updateLabel(input.value);
+    });
+
+    await showModal("開始ノードの編集", pr);
+});
+
 
 // てすとこーど
 // addNode("process");

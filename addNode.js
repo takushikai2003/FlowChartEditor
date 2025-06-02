@@ -24,23 +24,24 @@ export function addNode(type, x=50, y=50) {
         loop_end: 'ループ終端'
     };
 
-    const node = document.createElement('div');
-    node.className = 'node';
-    node.dataset.id = id;
-    node.dataset.type = type;
+    const nodeEl = document.createElement('div');
+    nodeEl.className = 'node';
+    nodeEl.dataset.id = id;
+    nodeEl.dataset.type = type;
 
     const shape = document.createElement('div');
     shape.className = "shape " + type;
-    node.appendChild(shape);
+    nodeEl.appendChild(shape);
 
     if (type === 'decision') {
         const span = document.createElement('span');
+        span.className = 'node-label';
         span.textContent = labels[type];
         shape.appendChild(span);
         
         const pointWrapper = document.createElement('div');
         pointWrapper.className = 'point-wrapper';
-        node.appendChild(pointWrapper);
+        nodeEl.appendChild(pointWrapper);
         // Noの点
         const fromPointNo = document.createElement('div');
         fromPointNo.className = 'from-point-no';
@@ -62,15 +63,18 @@ export function addNode(type, x=50, y=50) {
         const yesLabel = document.createElement('span');
         yesLabel.className = 'yes-label';
         yesLabel.textContent = 'Yes';
-        node.appendChild(yesLabel);
+        nodeEl.appendChild(yesLabel);
         const noLabel = document.createElement('span');
         noLabel.className = 'no-label';
         noLabel.textContent = 'No';
-        node.appendChild(noLabel);
+        nodeEl.appendChild(noLabel);
     
     }
     else {
-        shape.textContent = labels[type];
+        const span = document.createElement('span');
+        span.className = 'node-label';
+        span.textContent = labels[type];
+        shape.appendChild(span);
 
         // const pointWrapper = document.createElement('div');
         // pointWrapper.className = 'point-wrapper';
@@ -101,14 +105,18 @@ export function addNode(type, x=50, y=50) {
     
     }
 
-    node.style.left = x + 'px';
-    node.style.top = y + 'px';
+    nodeEl.style.left = x + 'px';
+    nodeEl.style.top = y + 'px';
 
-    canvas.appendChild(node);
-    state.nodes.push(new Node( id, type, labels[type], x, y));
+    canvas.appendChild(nodeEl);
+    const node = new Node( id, type, labels[type], x, y, nodeEl);
+    state.nodes.push(node);
 
-    bindNodeEvents(node);
+    bindNodeEvents(nodeEl);
     renderLines();
+
+
+    return node;
 }
 
 

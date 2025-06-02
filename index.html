@@ -6,9 +6,16 @@
   <link rel="stylesheet" href="./grid.css">
   <link rel="stylesheet" href="./toolbar.css">
   <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./modal.css">
 </head>
 <body>
 
+<body>
+    <div id="modal" hidden>
+        <button id="modal-close">×</button>
+        <h1 id="modal-title">操作</h1>
+        <div id="modal-content"></div>
+    </div>
 <div id="grid">
     <div id="toolbar">
         <!-- <button id="add_start">開始</button>
@@ -35,6 +42,8 @@
         </div>
     </div>
 </div>
+
+</body>
 
 <script src="./global.js"></script>
 <script type="module" src="./main.js"></script>
