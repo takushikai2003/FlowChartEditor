@@ -4,6 +4,7 @@ import { Node } from "./class.js";
 
 const FROM_LINE_COLOR = 'red';
 const TO_LINE_COLOR = 'blue';
+const LOOP_INITIAL_COUNT = 1; // ループ開始ノードの初期値
 
 
 const canvas = document.getElementById('canvas');
@@ -18,9 +19,9 @@ export function addNode(type, x=50, y=50) {
         start: '開始',
         end: '終了',
         io: '入出力',
-        process: '雨が降ったら傘をさす',
-        decision: '分岐あああああああああ',
-        loop_start: 'ループ始端',
+        process: '処理',
+        decision: '分岐',
+        loop_start: LOOP_INITIAL_COUNT + '回ループ',
         loop_end: 'ループ終端'
     };
 
@@ -110,6 +111,10 @@ export function addNode(type, x=50, y=50) {
 
     canvas.appendChild(nodeEl);
     const node = new Node( id, type, labels[type], x, y, nodeEl);
+    if(type === "loop_start"){
+        node.setData("loop_count", LOOP_INITIAL_COUNT);
+    }
+
     state.nodes.push(node);
 
     bindNodeEvents(nodeEl);
