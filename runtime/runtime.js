@@ -6,7 +6,7 @@ export function run() {
     // state.nodesはfnの情報を持っているので、そこから必要な情報を取得する
     const state_copy = JSON.parse(JSON.stringify(state));
 
-    const loop_stacks = [];
+    const loop_stack = [];
 
     const startNode = state_copy.nodes.find(node => node.type === 'start');
     const startNodeEl = document.querySelector(`.node[data-id="${startNode.id}"]`);
@@ -40,7 +40,21 @@ export function run() {
         }
         else if(nextNode.type === 'end'){
             console.log("End node reached.");
-            console.log("実行が完了しました。");
+
+            let syntactError = false;
+            if (loop_stack.length > 0) {
+                syntactError = true;
+                console.error(`ループの終了が見つかっていない [loop_start] が ${loop_stack.length} 件あります`);
+                loop_stack.forEach(loop => {
+                    console.error(`未終了ループ: 開始ノードID = ${loop.fromId}`);
+                });
+            }
+
+            console.log("実行が終了しました。");
+
+            if (syntactError) {
+                return false;
+            }
             return true;
         }
         // else if(nextNode.type === 'io') {
@@ -72,44 +86,24 @@ export function run() {
         else if(nextNode.type === 'loop_start') {
 
             const fromId = nextNodeDom.querySelector('.from-point').dataset.id;
+            loop_stack.push({ remaining: nextNode.data.loop_count, fromId: fromId });
 
-
-            // ループ開始ノードの場合は、ループスタックに追加
-            // ループ回数-1回分追加する（一回分はすぐに実行されるため）
-            const loop_stack = [];
-            for(let i = 0; i < nextNode.data.loop_count -1; i++){
-                // ループスタックに追加
-                console.log("loop push", fromId);
-                loop_stack.push(fromId);
-            }
-
-            loop_stacks.push(loop_stack);
-            
             eatToken(fromId);
         }
         else if(nextNode.type === 'loop_end') {
-            // ループ終了ノードの場合は、ループスタックからポップして、ループ開始ノードに戻る
-            if(loop_stacks.length > 0) {
-                console.log("loop pop")
-                const loop_stack = loop_stacks.pop();
-                // ループスタックが空でない場合は、最後のfromIdを取得してループ開始ノードに戻る
-                const fromId = loop_stack.pop();
-
-                // ループスタックがまだ残っている場合は戻す
-                if(loop_stack.length > 0) {
-                    console.log("loop stack not empty, continue loop");
-                    loop_stacks.push(loop_stack);
-                }
-                eatToken(fromId);
+            if (loop_stack.length === 0) {
+                console.warn(`対応する [loop_start] が見つかりません（loop_end: ${nextNode.id}）`);
+                return false;
             }
-            // ループスタックが空の場合は、ループを終了して次のノードに進む
-            else{
+            const top = loop_stack[loop_stack.length - 1];
+            top.remaining -= 1;
+            if (top.remaining > 0) {
+                eatToken(top.fromId); // ループ先頭に戻る
+            } else {
+                loop_stack.pop(); // ループ終了
                 const fromId = nextNodeDom.querySelector('.from-point').dataset.id;
-                eatToken(fromId);
+                eatToken(fromId); // ループ終了後のノードへ進む
             }
-            // else {
-            //     console.error("Loop end reached without a matching loop start.");
-            // }
         }
         else if(nextNode.type === 'decision') {
             // 分岐ノードの場合は、yes/noのエッジを処理する
