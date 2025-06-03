@@ -5,6 +5,10 @@ import { showModal } from "./modal.js";
 import { process_kinds, decision_kinds, loop_start_kinds } from "./data/nodeKinds.js";
 import { stageInit } from "./stage/stage_main.js";
 
+
+
+let speed = 500; // 実行速度(ms)
+
 // document.getElementById("add_start")
 // .addEventListener("click", () => addNode('start'));
 // document.getElementById("add_end")
@@ -129,8 +133,8 @@ document.getElementById("add_loop_end")
 document.getElementById("run_start")
 .addEventListener("click", async () => {
     stageInit(); // ステージを初期化
-    
-    const res = await run();
+
+    const res = await run(speed);
     if (res) {
         console.log("実行が完了しました。");
     } else {
@@ -146,6 +150,39 @@ document.getElementById("run_start")
 // .addEventListener("change", (event) => {
 //     loadFile(event);
 // });
+
+
+document.getElementById("speed")
+.addEventListener("click", async () => {
+    const pr = document.createElement("div");
+    const select = document.createElement("select");
+    select.classList.add("modal-select");
+    const option1 = document.createElement("option");
+    option1.value = 100;
+    option1.textContent = "はやい";
+    option1.selected = speed === 100;
+    select.appendChild(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = 500;
+    option2.textContent = "ふつう";
+    option2.selected = speed === 500; // 初期選択
+    select.appendChild(option2);
+
+    const option3 = document.createElement("option");
+    option3.value = 1000;
+    option3.textContent = "おそい";
+    option3.selected = speed === 1000; // 初期選択
+    select.appendChild(option3);
+    
+
+    pr.appendChild(select);
+    select.addEventListener("change", () => {
+        speed = Number(select.value);
+    });
+
+    await showModal("スピード", pr);
+});
 
 
 // 開始・終了ノードは自動的に追加
