@@ -66,10 +66,10 @@ document.getElementById("add_loop_start")
 document.getElementById("add_loop_end")
 .addEventListener("click", () => addNode('loop_end'));
 
-// document.getElementById("compile")
-// .addEventListener("click", () => {
-//     compile();
-// });
+document.getElementById("compile")
+.addEventListener("click", () => {
+    compile();
+});
 
 // document.getElementById("save_file")
 // .addEventListener("click", () => {

@@ -28,8 +28,8 @@ export function renderLines() {
         const toEl = canvas.querySelector(`[data-id="${edge.to}"]`);
 
         if (!fromEl || !toEl) {
-			console.warn(`要素が見つからない: fromEl=${fromEl}, toEl=${toEl}`);
-			return; // 要素が見つからない場合は警告して終了
+			// console.warn(`要素が見つからない: fromEl=${fromEl}, toEl=${toEl}`);
+			return false; // 要素が見つからない場合はfalseを返す
 		}
 		const fromRect = fromEl.parentNode.parentNode.querySelector(".shape").getBoundingClientRect();
 		// 接続先は、それが線であるかノードであるかで取る要素が違う
@@ -200,7 +200,19 @@ export function renderLines() {
 			continue;
 		}
 	}
+
+	// 最後に、参照先が無いedgeを削除する
+	state.edges = state.edges.filter(edge => {
+		const fromEl = canvas.querySelector(`[data-id="${edge.from}"]`);
+		const toEl = canvas.querySelector(`[data-id="${edge.to}"]`);
+		if (!fromEl || !toEl) {
+			// console.warn(`要素が見つからない: fromEl=${fromEl}, toEl=${toEl}`);
+			return false; // 要素が見つからない場合は削除
+		}
+		return true; // 要素が存在する場合は残す
+	});
 	
+	return true;
 }
 
 
