@@ -1,33 +1,41 @@
 'use strict';
-import { state as _state } from '../var.js';
+import { state } from '../var.js';
 
 export function run() {
-    // まずはstateをコピーしておく
-    const state = JSON.parse(JSON.stringify(_state));
+    // まずはstateをコピーしておく(state.edgeを削除するため)
+    // state.nodesはfnの情報を持っているので、そこから必要な情報を取得する
+    const state_copy = JSON.parse(JSON.stringify(state));
 
-    const startNode = state.nodes.find(node => node.type === 'start');
+    const startNode = state_copy.nodes.find(node => node.type === 'start');
     const startNodeEl = document.querySelector(`.node[data-id="${startNode.id}"]`);
     const startNodefromId = startNodeEl.querySelector('.from-point').dataset.id;
-
 
     let code = '';
     code += "start\n";
 
 
     function eatToken(fromId){
-        const edge = state.edges.find(edge => edge.from === fromId);
+        const edge = state_copy.edges.find(edge => edge.from === fromId);
         if(!edge) return null;
-        const edgeIndex = state.edges.indexOf(edge);
+        const edgeIndex = state_copy.edges.indexOf(edge);
         // そのエッジを消す
         if(edgeIndex !== -1) {
-            state.edges.splice(edgeIndex, 1);
+            state_copy.edges.splice(edgeIndex, 1);
         }
 
-        console.log(edge.to);
+        // console.log(edge.to);
         const nextNodeDom = getNodeDomBytoId(edge.to); // そのエッジのtoポイントを探す
 
         code += `${nextNodeDom.dataset.type}\n`;
-        console.log(nextNodeDom.dataset.type);
+        // console.log(nextNodeDom.dataset.type);
+        // ノードに紐づけられた内容を表示
+        const nextNode = state.nodes.find(node => node.id === nextNodeDom.dataset.id);
+        // console.log(nextNode)
+        // if(nextNode?.data.fn){
+        //     console.log(nextNode.label);
+        //     console.log(`Function: ${nextNode.data.fn}`);
+        // }
+        
         
         switch(nextNodeDom.dataset.type) {
             case 'start':
