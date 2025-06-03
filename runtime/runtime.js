@@ -1,7 +1,7 @@
 'use strict';
 import { state as _state } from '../var.js';
 
-export function compile() {
+export function run() {
     // まずはstateをコピーしておく
     const state = JSON.parse(JSON.stringify(_state));
 
