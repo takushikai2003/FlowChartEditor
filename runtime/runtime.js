@@ -1,7 +1,9 @@
 'use strict';
 import { state } from '../var.js';
 
-export function run() {
+// speed: 1ステップにかかる時間(ms)
+// 0の場合は、すぐに実行する
+export function run(speed=100) {
     // まずはstateをコピーしておく(state.edgeを削除するため)
     // state.nodesはfnの情報を持っているので、そこから必要な情報を取得する
     const state_copy = JSON.parse(JSON.stringify(state));
@@ -16,7 +18,7 @@ export function run() {
     code += "start\n";
 
 
-    function eatToken(fromId){
+    async function eatToken(fromId){
         const edge = state_copy.edges.find(edge => edge.from === fromId);
         if(!edge) return null;
 
@@ -29,6 +31,12 @@ export function run() {
         // console.log(edge.to);
         const nowNodeDom = getNodeDomByfromId(fromId); // そのエッジのfromポイントを探す
         const nowNode = state.nodes.find(node => node.id === nowNodeDom.dataset.id);
+        // 実行中のノードを強調表示する
+        nowNodeDom.querySelector(".shape").classList.add("node-emphasis");
+        await wait(speed);
+        // 強調表示を解除する
+        nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
+
 
         const nextNodeDom = getNodeDomBytoId(edge.to); // そのエッジのtoポイントを探す
         const nextNode = state.nodes.find(node => node.id === nextNodeDom.dataset.id);
@@ -51,6 +59,11 @@ export function run() {
             }
 
             console.log("実行が終了しました。");
+            // 強調表示する
+            nowNodeDom.querySelector(".shape").classList.add("node-emphasis");
+            await wait(speed);
+            // 強調表示を解除する
+            nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
 
             if (syntactError) {
                 return false;
@@ -165,4 +178,9 @@ function getNodeDomByfromId(from){
     const fromPoint = document.querySelector(`[data-id="${from}"]`);
 
     return fromPoint.closest('.node');
+}
+
+
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

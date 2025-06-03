@@ -14,6 +14,12 @@
     height: 90px;
     /* padding: 10px 10px; */
 }
+
+/* 実行時に強調する */
+.node-emphasis{
+    border: red solid 4px !important;
+}
+
 .shape{
     width: 100%;
     height: 100%;
@@ -40,7 +46,7 @@
 .start { border-radius: 25px; background: #d0f0d0; }
 .end { border-radius: 25px; background: #d0f0d0; }
 .io { width: 80%;transform: skewX(-20deg); background: #d0d0f0; }
-.process { background: #f0d0d0; }
+.process { background: #d0d0f0; }
 .decision {
     width: 100px;
     height: 100px;
