@@ -1,56 +1,24 @@
-function go_forward() {
-    console.log("前へ");
-    return "前へ";
-}
-function go_backward() {
-    console.log("後ろへ");
-    return "後ろへ";
-}
-function go_right() {
-    console.log("右へ");
-    return "右へ";
-}
-function go_left() {
-    console.log("左へ");
-    return "左へ";
-}
-
-function is_wall_front() {
-    console.log("前に壁がある");
-    return true;
-}
-function is_wall_back() {
-    console.log("後ろに壁がない");
-    return false;
-}
-function is_wall_right() {
-    console.log("右に壁がある");
-    return true;
-}
-function is_wall_left() {
-    console.log("左に壁がある");
-    return true;
-}
+import { moveUp, moveDown, moveRight, moveLeft, isWallUp, isWallDown, isWallRight, isWallLeft } from "../stage/stage_main.js";
 
 
 // 処理ノードのデータ
 export const process_kinds = [
     {
         label: "前へ",
-        fn: go_forward,
+        fn: moveUp,
         default: true
     },
     {
         label: "後ろへ",
-        fn: go_backward
+        fn: moveDown
     },
     {
         label: "右へ",
-        fn: go_right
+        fn: moveRight
     },
     {
         label: "左へ",
-        fn: go_left
+        fn: moveLeft
     }
 ];
 
@@ -58,20 +26,20 @@ export const process_kinds = [
 export const decision_kinds = [
     {
         label: "前に壁",
-        fn: is_wall_front,
+        fn: isWallUp,
         default: true
     },
     {
         label: "後ろに壁",
-        fn: is_wall_back
+        fn: isWallDown
     },
     {
         label: "右に壁",
-        fn: is_wall_right
+        fn: isWallRight
     },
     {
         label: "左に壁",
-        fn: is_wall_left
+        fn: isWallLeft
     }
 ];
 

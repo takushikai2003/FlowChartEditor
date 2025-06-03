@@ -1,5 +1,3 @@
-
-
 const stage_canvas = document.getElementById('stage_canvas');
 
 const ctx = stage_canvas.getContext('2d');
@@ -32,16 +30,8 @@ export function fillCell(x, y, color) {
 // fillCell(3, 2, '#777777');
 
 // 同様に、指定の画像をセルに描画する関数
-export function drawImageInCell(x, y, imageSrc) {
-    return new Promise((resolve) => {
-        // 画像を読み込んでから描画する
-        const img = new Image();
-        img.onload = () => {
-            ctx.drawImage(img, x * gridSize, (6 - y) * gridSize, gridSize, gridSize);
-            resolve();
-        };
-        img.src = imageSrc;
-    });
+export function drawImageInCell(x, y, img) {
+    ctx.drawImage(img, x * gridSize, (6 - y) * gridSize, gridSize, gridSize);
 }
 
 // canvas全体に大きく太さ10での赤丸を描く関数（canvasの70%の大きさ）

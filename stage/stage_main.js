@@ -3,7 +3,28 @@ import { drawGrid, fillCell, drawImageInCell, drawCircle, drawCross } from './co
 
 const chara_now = { x: start.x, y: start.y }; // 現在のキャラクター位置
 
-export async function drawStage() {
+function imageLoad(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = (err) => reject(err);
+        img.src = src;
+    });
+}
+
+const charaImage = await imageLoad('./images/chara.png');
+const goalImage = await imageLoad('./images/goal.png');
+const wallImage = await imageLoad('./images/wall.png');
+
+export function stageInit() {
+    // キャラクターの初期位置を設定
+    chara_now.x = start.x;
+    chara_now.y = start.y;
+    // ステージを初期化
+    drawStage();
+}
+
+function drawStage() {
     // グリッドを描画
     drawGrid();
 
@@ -11,28 +32,32 @@ export async function drawStage() {
     for (let y = 0; y < walls.length; y++) {
         for (let x = 0; x < walls[y].length; x++) {
             if (walls[y][x]) {
-                await drawImageInCell(x, y, './images/wall.png'); 
+                drawImageInCell(x, y, wallImage); 
             }
         }
     }
 
     // キャラ位置を描画
-    await drawImageInCell(chara_now.x, chara_now.y, './images/chara.png');
+    drawImageInCell(chara_now.x, chara_now.y, charaImage);
 
     // ゴール位置を描画
-    await drawImageInCell(goal.x, goal.y, './images/goal.png');
+    drawImageInCell(goal.x, goal.y, goalImage);
 }
 
-await drawStage();
-drawCircle();
-drawCross();
+drawStage();
 
 
 // 失敗したときに呼ばれる関数
-export function onFailure() {
+function onFailure() {
     console.error("失敗しました。");
-    // ここに失敗時の処理を追加
     drawCross(); // 失敗時に青のバツを描画
+}
+
+// 成功したときに呼ばれる関数
+function onSuccess() {
+    console.log("成功しました！");
+    // ここに成功時の処理を追加
+    drawCircle(); // 成功時に赤い丸を描画
 }
 
 // 座標に壁があるかどうかをチェックする関数
@@ -44,7 +69,7 @@ function isWall(x, y) {
 }
 
 // キャラクターがゴールに到達したかどうかをチェックする関数
-export function isGoal() {
+function isGoal() {
     return chara_now.x === goal.x && chara_now.y === goal.y;
 }
 
@@ -58,10 +83,12 @@ export function moveUp() {
         drawStage();
         if (isGoal()) {
             console.log("ゴールに到達しました！");
+            onSuccess(); // 成功時の処理を呼び出す
             return true; // ゴールに到達
         }
     }
     else {
+        fillCell(chara_now.x, newY, 'red'); // 壁にぶつかったら赤く塗る
         onFailure();
         return false; // ゴールに到達していない
     }
@@ -76,10 +103,12 @@ export function moveDown() {
         drawStage();
         if (isGoal()) {
             console.log("ゴールに到達しました！");
+            onSuccess(); // 成功時の処理を呼び出す
             return true; // ゴールに到達
         }
     }
     else {
+        fillCell(chara_now.x, newY, 'red'); // 壁にぶつかったら赤く塗る
         onFailure();
         return false; // ゴールに到達していない
     }
@@ -93,7 +122,9 @@ export function moveRight() {
         chara_now.x = newX;
         drawStage();
         if (isGoal()) {
+            fillCell(newX, chara_now.y, 'green'); // ゴールに到達したら緑に塗る
             console.log("ゴールに到達しました！");
+            onSuccess(); // 成功時の処理を呼び出す
             return true; // ゴールに到達
         }
     }
@@ -111,7 +142,9 @@ export function moveLeft() {
         chara_now.x = newX;
         drawStage();
         if (isGoal()) {
+            fillCell(newX, chara_now.y, 'green'); // ゴールに到達したら緑に塗る
             console.log("ゴールに到達しました！");
+            onSuccess(); // 成功時の処理を呼び出す
             return true; // ゴールに到達
         }
     }

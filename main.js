@@ -3,7 +3,7 @@ import { saveFile, loadFile } from "./fileMagager.js";
 import { run } from "./runtime/runtime.js";
 import { showModal } from "./modal.js";
 import { process_kinds, decision_kinds, loop_start_kinds } from "./data/nodeKinds.js";
-
+import { stageInit } from "./stage/stage_main.js";
 
 // document.getElementById("add_start")
 // .addEventListener("click", () => addNode('start'));
@@ -126,9 +126,16 @@ document.getElementById("add_loop_start")
 document.getElementById("add_loop_end")
 .addEventListener("click", () => addNode('loop_end'));
 
-document.getElementById("run")
-.addEventListener("click", () => {
-    run();
+document.getElementById("run_start")
+.addEventListener("click", async () => {
+    stageInit(); // ステージを初期化
+    
+    const res = await run();
+    if (res) {
+        console.log("実行が完了しました。");
+    } else {
+        console.error("実行中にエラーが発生しました。");
+    }
 });
 
 // document.getElementById("save_file")

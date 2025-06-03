@@ -1,9 +1,10 @@
 'use strict';
 import { state } from '../var.js';
+import { showModal } from '../modal.js';
 
 // speed: 1ステップにかかる時間(ms)
 // 0の場合は、すぐに実行する
-export function run(speed=100) {
+export async function run(speed=100) {
     // まずはstateをコピーしておく(state.edgeを削除するため)
     // state.nodesはfnの情報を持っているので、そこから必要な情報を取得する
     const state_copy = JSON.parse(JSON.stringify(state));
@@ -16,6 +17,8 @@ export function run(speed=100) {
 
     let code = '';
     code += "start\n";
+
+    let success = false;
 
 
     async function eatToken(fromId){
@@ -53,6 +56,13 @@ export function run(speed=100) {
             if (loop_stack.length > 0) {
                 syntactError = true;
                 console.error(`ループの終了が見つかっていない [loop_start] が ${loop_stack.length} 件あります`);
+
+                const div = document.createElement("div");
+                div.innerHTML = `<p style="color:red">[ループ終端]と対応していない [ループ始端] が ${loop_stack.length} 個あります。</p>`;
+
+                showModal("構造エラー", div);
+
+
                 loop_stack.forEach(loop => {
                     console.error(`未終了ループ: 開始ノードID = ${loop.fromId}`);
                 });
@@ -68,6 +78,7 @@ export function run(speed=100) {
             if (syntactError) {
                 return false;
             }
+            success = true;
             return true;
         }
         // else if(nextNode.type === 'io') {
@@ -153,8 +164,9 @@ export function run(speed=100) {
     }
 
 
-    eatToken(startNodefromId);
-    console.log(code);
+    await eatToken(startNodefromId);
+
+    return success;
 }
 
 
