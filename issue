@@ -1,1 +1,2 @@
 ・safariで"style", "pointer-events: bounding-box;"が動作しないので、線が消せない
+・ループの処理は微妙
