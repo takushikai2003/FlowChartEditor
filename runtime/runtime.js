@@ -127,7 +127,9 @@ export function run() {
 function getNodeDomBytoId(toId){
     // toがedgeなら、その先のNodeを探す
     if(toId.includes("line-group")){
-        toId = toId.slice(-22);
+        // toId = toId.slice(-23);
+        // to-pointから始まる後ろのidを取得
+        toId = toId.match(/to-point-\d+/g);
     }
 
     // そのエッジのtoポイントを探す

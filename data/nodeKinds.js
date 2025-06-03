@@ -3,25 +3,32 @@ function go_forward() {
     return "前へ";
 }
 function go_backward() {
+    console.log("後ろへ");
     return "後ろへ";
 }
 function go_right() {
+    console.log("右へ");
     return "右へ";
 }
 function go_left() {
+    console.log("左へ");
     return "左へ";
 }
 
 function is_wall_front() {
+    console.log("前に壁がある");
     return true;
 }
 function is_wall_back() {
-    return true;
+    console.log("後ろに壁がない");
+    return false;
 }
 function is_wall_right() {
+    console.log("右に壁がある");
     return true;
 }
 function is_wall_left() {
+    console.log("左に壁がある");
     return true;
 }
 
