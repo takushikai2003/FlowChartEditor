@@ -37,11 +37,11 @@ function drawStage() {
         }
     }
 
-    // キャラ位置を描画
-    drawImageInCell(chara_now.x, chara_now.y, charaImage);
-
     // ゴール位置を描画
     drawImageInCell(goal.x, goal.y, goalImage);
+    
+    // キャラ位置を描画
+    drawImageInCell(chara_now.x, chara_now.y, charaImage);
 }
 
 drawStage();

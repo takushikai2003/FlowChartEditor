@@ -9,4 +9,4 @@ export const walls = [
 ];//7*7
 
 export const start = { x: 1, y: 1 }; // スタート位置
-export const goal = { x: 5, y: 5 }; // ゴール位置
+export const goal = { x: 1, y: 3 }; // ゴール位置
