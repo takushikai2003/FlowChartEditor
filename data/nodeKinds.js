@@ -1,4 +1,5 @@
 function go_forward() {
+    console.log("前へ");
     return "前へ";
 }
 function go_backward() {

@@ -24,3 +24,12 @@ export class Node{
         return this.data[key];
     }
 }
+
+
+export class IdGenerator {
+    static currentId = 0;
+
+    static next() {
+        return String(Date.now()) + String(this.currentId++);
+    }
+}

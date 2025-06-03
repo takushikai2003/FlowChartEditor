@@ -1,6 +1,6 @@
 import { state } from "./var.js";
 import { renderLines } from "./renderLines.js";
-import { Node } from "./class.js";
+import { Node, IdGenerator } from "./class.js";
 
 const FROM_LINE_COLOR = 'red';
 const TO_LINE_COLOR = 'blue';
@@ -14,7 +14,7 @@ let dragging = null;
 // let connectTo = null;
 
 export function addNode(type, x=50, y=50) {
-    const id = 'node-' + Date.now();
+    const id = 'node-' + IdGenerator.next();
     const labels = {
         start: '開始',
         end: '終了',
@@ -46,17 +46,17 @@ export function addNode(type, x=50, y=50) {
         // Noの点
         const fromPointNo = document.createElement('div');
         fromPointNo.className = 'from-point-no';
-        fromPointNo.dataset.id = 'from-point-no-' + Date.now();
+        fromPointNo.dataset.id = 'from-point-no-' + IdGenerator.next();
         pointWrapper.appendChild(fromPointNo);
         // Yesの点
         const fromPointYes = document.createElement('div');
         fromPointYes.className = 'from-point-yes';
-        fromPointYes.dataset.id = 'from-point-yes-' + Date.now();
+        fromPointYes.dataset.id = 'from-point-yes-' + IdGenerator.next();
         pointWrapper.appendChild(fromPointYes);
         // 入口
         const toPoint = document.createElement('div');
         toPoint.className = 'to-point-decision';
-        toPoint.dataset.id = 'to-point-decision-' + Date.now();
+        toPoint.dataset.id = 'to-point-decision-' + IdGenerator.next();
         pointWrapper.appendChild(toPoint);
 
 
@@ -84,23 +84,23 @@ export function addNode(type, x=50, y=50) {
         if(type == "start"){
             const fromPoint = document.createElement('div');
             fromPoint.className = 'from-point';
-            fromPoint.dataset.id = 'from-point-' + Date.now();
+            fromPoint.dataset.id = 'from-point-' + IdGenerator.next();
             shape.appendChild(fromPoint);
         }
         else if(type == "end"){
             const toPoint = document.createElement('div');
             toPoint.className = 'to-point';
-            toPoint.dataset.id = 'to-point-' + Date.now();
+            toPoint.dataset.id = 'to-point-' + IdGenerator.next();
             shape.appendChild(toPoint);
         }
         else{
             const fromPoint = document.createElement('div');
             fromPoint.className = 'from-point';
-            fromPoint.dataset.id = 'from-point-' + Date.now();
+            fromPoint.dataset.id = 'from-point-' + IdGenerator.next();
             shape.appendChild(fromPoint);
             const toPoint = document.createElement('div');
             toPoint.className = 'to-point';
-            toPoint.dataset.id = 'to-point-' + Date.now();
+            toPoint.dataset.id = 'to-point-' + IdGenerator.next();
             shape.appendChild(toPoint);
         }
     
