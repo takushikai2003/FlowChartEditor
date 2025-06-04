@@ -1,7 +1,41 @@
-import { walls, start, goal, isMaze, mazes } from '../data/question_1.js';
+import { walls as walls1, start as start1, goal as goal1, isMaze as isMaze1, mazes as mazes1 } from '../data/question_1.js';
+import { walls as walls2, start as start2, goal as goal2, isMaze as isMaze2, mazes as mazes2 } from '../data/question_2.js';
+import { walls as walls3, start as start3, goal as goal3, isMaze as isMaze3, mazes as mazes3 } from '../data/question_3.js';
+
 import { drawGrid, fillCell, drawImageInCell, drawCircle, drawCross } from './common.js';
 import { runtime } from '../runtime/runtime.js';
 import { random } from '../random.js';
+
+// URLパラメータから問題を指定
+const params = new URLSearchParams(document.location.search);
+const q_num = Number(params.get("q"));
+console.log("q_num:", q_num);
+let walls, start, goal, isMaze, mazes;
+if (q_num === 1) {
+    walls = walls1;
+    start = start1;
+    goal = goal1;
+    isMaze = isMaze1;
+    mazes = mazes1;
+} else if (q_num === 2) {
+    walls = walls2;
+    start = start2;
+    goal = goal2;
+    isMaze = isMaze2;
+    mazes = mazes2;
+} else if (q_num === 3) {
+    walls = walls3;
+    start = start3;
+    goal = goal3;
+    isMaze = isMaze3;
+    mazes = mazes3;
+}
+else{
+    console.error("q_numが不正です。1, 2, 3のいずれかを指定してください。");
+}
+
+
+
 
 const chara_now = { x: start.x, y: start.y }; // 現在のキャラクター位置
 
@@ -116,7 +150,7 @@ function onSuccess() {
     if(isMaze){
         drawStage(false); // 壁を隠さずに描画
     }
-    
+
     drawCircle(); // 成功時に赤い丸を描画
     runtime.stop(); // ランタイムを停止
 }
