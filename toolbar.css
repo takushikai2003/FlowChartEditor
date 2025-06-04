@@ -5,3 +5,23 @@
 #toolbar button {
     margin-right: 5px;
 }
+
+#add_process{
+    background: #d0d0f0;
+    border-radius: 10%;
+}
+#add_decision{
+    background: #fff2cc;
+    border-radius: 10%;
+
+}
+#add_loop_start{
+    background: #ffe0e0;
+    border-radius: 10%;
+
+}
+#add_loop_end{
+    background: #ffe0e0;
+    border-radius: 10%;
+
+}
