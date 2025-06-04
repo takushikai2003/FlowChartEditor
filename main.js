@@ -13,7 +13,7 @@ import { renderLines } from "./renderLines.js";
 const initialState = loadHistory("state");
 const initialDom = loadHistory("dom");
 
-console.log("history:", initialState);
+// console.log("history:", initialState);
 
 // console.log("dom:", initialDom);
 if (initialState.nodes || initialState.edges) {
@@ -31,7 +31,7 @@ if (initialState.nodes || initialState.edges) {
         // ノードを追加
         const newNode = new Node(node.id, node.type, node.label, node.x, node.y, nodeEl);
         newNode.data = node.data || {}; // データを復元
-        console.log(node.data)
+        // console.log(node.data);
 
         switch (node.type) {
             case "process":
@@ -42,32 +42,6 @@ if (initialState.nodes || initialState.edges) {
                 break;
             case "loop_start":
                 newNode.el.addEventListener("dblclick", () => { onLoopStartNodeDblClick(newNode); });
-                console.log("loop_count:", newNode.getData("loop_count"));
-                switch (newNode.getData("loop_count")) {
-                    case 1:
-                        newNode.updateLabel("1回ループ");
-                        break;
-                    case 2:
-                        newNode.updateLabel("2回ループ");
-                        break;
-                    case 3:
-                        newNode.updateLabel("3回ループ");
-                        break;
-                    case 4:
-                        newNode.updateLabel("4回ループ");
-                        break;
-                    case 5:
-                        newNode.updateLabel("5回ループ");
-                        break;
-                    case 1000:
-                        newNode.updateLabel("ずっとループ");
-                        break;
-
-                    default:
-                        console.warn("不明なループ回数:", newNode.getData("loop_count"));
-                        break;
-                }
-
                 break;
             case "loop_end":
                 // ループ終了ノードは特にイベントはない

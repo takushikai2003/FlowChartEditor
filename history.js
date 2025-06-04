@@ -1,5 +1,5 @@
 export function loadHistory(key) {
-    console.log("Loading history:", key);
+    // console.log("Loading history:", key);
     const history = localStorage.getItem(key);
     if (history) {
         try {
