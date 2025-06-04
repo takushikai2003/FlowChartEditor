@@ -1,4 +1,5 @@
 import { state } from "./var.js";
+import { saveHistory } from "./history.js";
 
 const LINE_SELECTED_COLOR = "#FF11FF"; // 選択時の線の色
 
@@ -6,6 +7,21 @@ const canvas = document.getElementById('canvas');
 const lines = document.getElementById('lines');
 
 export function renderLines() {
+	saveHistory("state", state); // 状態を保存
+
+	// linesより後ろのDOM状態を保存
+	const svg = document.getElementById("lines");
+	let htmlString = "";
+
+	let next = svg.nextElementSibling;
+	while (next) {
+		htmlString += next.outerHTML;
+		next = next.nextElementSibling;
+	}
+
+	saveHistory("dom", htmlString); // linesより後ろのDOM状態を保存
+
+	
 	const _lines = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 	_lines.innerHTML = `
       <defs>

@@ -1,10 +1,47 @@
-import { addNode } from "./addNode.js";
+import { addNode, bindNodeEvents } from "./addNode.js";
 import { saveFile, loadFile } from "./fileMagager.js";
 import { runtime } from "./runtime/runtime.js";
 import { showModal } from "./modal.js";
 import { process_kinds, decision_kinds, loop_start_kinds } from "./data/nodeKinds.js";
 import { stageInit } from "./stage/stage_main.js";
 import { random } from "./random.js";
+import { loadHistory } from "./history.js";
+import { state } from "./var.js";
+import { Node } from "./class.js";
+import { renderLines } from "./renderLines.js";
+
+const initialState = loadHistory("state");
+const initialDom = loadHistory("dom");
+console.log("history:", initialState);
+// console.log("dom:", initialDom);
+if (initialState.nodes || initialState.edges) {
+    // まずdomを復元
+    if (initialDom) {
+        // DOMの復元
+        document.getElementById("lines").insertAdjacentHTML("afterend", initialDom);
+    }
+    
+    // 次にノードとエッジを復元
+    for(const node of initialState.nodes) {
+        const nodeEl = document.querySelector(`[data-id="${node.id}"]`);
+        bindNodeEvents(nodeEl); // イベントをバインド
+
+        // ノードを追加
+        const newNode = new Node(node.id, node.type, node.label, node.x, node.y, nodeEl);
+        // newNode.setData("fn", node.fn);
+
+        state.nodes.push(newNode);
+    }
+
+    state.edges = initialState.edges;
+
+    renderLines(); // エッジを再描画
+}
+else{
+    // 開始・終了ノードは自動的に追加
+    addNode('start', 100, 30);
+    addNode('end', 100, 500);
+}
 
 
 
@@ -138,6 +175,11 @@ document.getElementById("run_start")
     runtime.run(speed);
 });
 
+document.getElementById("run_stop")
+.addEventListener("click", () => {
+    runtime.stop();
+});
+
 // document.getElementById("save_file")
 // .addEventListener("click", () => {
 //     saveFile();
@@ -148,9 +190,13 @@ document.getElementById("run_start")
 // });
 
 
-document.getElementById("speed")
+document.getElementById("setup")
 .addEventListener("click", async () => {
     const pr = document.createElement("div");
+    pr.innerHTML = `
+    <hr/>
+    <h3>スピード</h3>
+    `;
     const select = document.createElement("select");
     select.classList.add("modal-select");
     const option1 = document.createElement("option");
@@ -177,10 +223,35 @@ document.getElementById("speed")
         speed = Number(select.value);
     });
 
-    await showModal("スピード", pr);
+    const pr2 = document.createElement("div");
+    pr2.innerHTML = `
+    <hr/>
+    <h3>すべてリセット</h3>
+    <span>すべてのノードとエッジを削除し、履歴をリセットします。この操作は取り消せません</span>
+    `;
+    const resetButton = document.createElement("button");
+    resetButton.textContent = "リセット";
+    resetButton.addEventListener("click", () => {
+        // 確認する
+        if (!confirm("本当にリセットしますか？")) {
+            return;
+        }
+        // ノードとエッジを初期化
+        state.nodes = [];
+        state.edges = [];
+        renderLines(); // エッジを再描画
+        localStorage.removeItem("state"); // 履歴を削除
+        localStorage.removeItem("dom"); // DOMを削除
+        document.getElementById("canvas").innerHTML = ""; // DOMをクリア
+
+        // リロード
+        location.reload();
+    });
+    pr2.appendChild(resetButton);
+
+    pr.appendChild(pr2);
+
+    await showModal("設定", pr);
 });
 
 
-// 開始・終了ノードは自動的に追加
-addNode('start', 100, 30);
-addNode('end', 100, 500);

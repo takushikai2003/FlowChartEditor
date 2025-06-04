@@ -13,6 +13,8 @@ const offset = { x: 0, y: 0 };
 let dragging = null;
 // let connectTo = null;
 
+// noIdがtrueの場合は、IDを生成せずにノードを追加
+// これは、ノードのIDを手動で設定する場合に使用
 export function addNode(type, x=50, y=50) {
     const id = 'node-' + IdGenerator.next();
     const labels = {
@@ -126,7 +128,7 @@ export function addNode(type, x=50, y=50) {
 
 
 
-function bindNodeEvents(node) {
+export function bindNodeEvents(node) {
     node.onmousedown = e => {
         const target_rect = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - target_rect.left;
