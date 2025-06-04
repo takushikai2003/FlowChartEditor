@@ -19,7 +19,7 @@ let speed = 500; // 実行速度(ms)
 // 処理ノード
 document.getElementById("add_process")
 .addEventListener("click", () => {
-    const node = addNode('process');
+    const node = addNode('process', 100+ random(0, 50), 100 + random(0, 50));
     // nodeの初期値を設定
     const defaultProcess = process_kinds.find(kind => kind.default);
     node.updateLabel(defaultProcess.label);
@@ -59,7 +59,7 @@ document.getElementById("add_process")
 // 分岐ノード
 document.getElementById("add_decision")
 .addEventListener("click", () => {
-    const node = addNode('decision');
+    const node = addNode('decision', 100+ random(0, 50), 100 + random(0, 50));
     // nodeの初期値を設定
     const defaultDecision = decision_kinds.find(kind => kind.default);
     node.updateLabel(defaultDecision.label);
@@ -100,7 +100,7 @@ document.getElementById("add_decision")
 // ループ開始ノード
 document.getElementById("add_loop_start")
 .addEventListener("click", () => {
-    const node = addNode('loop_start');
+    const node = addNode('loop_start', 100+ random(0, 50), 100 + random(0, 50));
     node.el.addEventListener("dblclick",async  () => {
         const pr = document.createElement("div");
         const select = document.createElement("select");
@@ -128,7 +128,7 @@ document.getElementById("add_loop_start")
     });
 });
 document.getElementById("add_loop_end")
-.addEventListener("click", () => addNode('loop_end'));
+.addEventListener("click", () => addNode('loop_end', 100+ random(0, 50), 100 + random(0, 50)));
 
 document.getElementById("run_start")
 .addEventListener("click", async () => {
@@ -182,4 +182,9 @@ document.getElementById("speed")
 
 // 開始・終了ノードは自動的に追加
 addNode('start', 100, 30);
-addNode('end', 100, 300);
+addNode('end', 100, 500);
+
+
+function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

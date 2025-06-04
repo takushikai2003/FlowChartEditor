@@ -1,4 +1,4 @@
-import { walls, start, goal } from '../data/question.js';
+import { walls, start, goal } from '../data/question_1.js';
 import { drawGrid, fillCell, drawImageInCell, drawCircle, drawCross } from './common.js';
 import { runtime } from '../runtime/runtime.js';
 
@@ -125,13 +125,14 @@ export function moveRight() {
         chara_now.x = newX;
         drawStage();
         if (isGoal()) {
-            fillCell(newX, chara_now.y, 'green'); // ゴールに到達したら緑に塗る
+            // fillCell(newX, chara_now.y, 'green'); // ゴールに到達したら緑に塗る
             console.log("ゴールに到達しました！");
             onSuccess(); // 成功時の処理を呼び出す
             return true; // ゴールに到達
         }
     }
     else {
+        fillCell(newX, chara_now.y, 'red'); // 壁にぶつかったら赤く塗る
         onFailure();
         return false; // ゴールに到達していない
     }
@@ -152,6 +153,7 @@ export function moveLeft() {
         }
     }
     else {
+        fillCell(newX, chara_now.y, 'red'); // 壁にぶつかったら赤く塗る
         onFailure();
         return false; // ゴールに到達していない
     }
