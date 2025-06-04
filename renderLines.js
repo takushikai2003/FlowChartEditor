@@ -66,23 +66,39 @@ export function renderLines() {
 			// node-lineの場合は右に回る
 			if(toEl.classList.contains("line-group")){
 
-				const x1 = fromRect.left + fromRect.width - canvasRect.left;
-				const y1 = fromRect.top + fromRect.height/2 - canvasRect.top;
-				const x2 = toRect.left + toRect.width - canvasRect.left;
+				const x1 = fromRect.left + fromRect.width/2 - canvasRect.left;
+				const y1 = fromRect.top + fromRect.height - canvasRect.top;
+				const x2 = toRect.left - canvasRect.left;
 				const y2 = toRect.top + toRect.height / 2 - canvasRect.top;
 				const midX = (x1 + x2) / 2;
 				const midY = (y1 + y2) / 2;
+				// const x1 = fromRect.left + fromRect.width / 2 - canvasRect.left;
+				// const y1 = fromRect.top + fromRect.height - canvasRect.top;
+				// const x2 = toRect.left + toRect.width - canvasRect.left;
+				// const y2 = toRect.top + toRect.height / 2 - canvasRect.top;
+				// const midX = (x1 + x2) / 2;
+				// const midY = (y1 + y2) / 2;
 
 				// 右に線をずらす幅
-				const right_shift = 100;
-				
-				// 水平線
-				renderLine(line_group, x1, y1, x1+right_shift, y1);
-				// 垂直線
-				renderLine(line_group, x1+right_shift, y1, x1+right_shift, y2);
-				// 水平線
-				renderArrow(line_group, x1+right_shift, y2, x2, y2);
+				const right_shift = 130;
 
+
+				if(y1 < y2) {
+					// 垂直線
+					renderLine(line_group, x1, y1, x1, y2);
+					// 水平線
+					renderArrow(line_group, x1, y2, x2, y2);
+				}
+				else{
+					// 下に少し降りる
+					renderLine(line_group, x1, y1, x1, y1+30);
+					// 水平線
+					renderLine(line_group, x1, y1+30, x1+right_shift, y1+30);
+					// 垂直線
+					renderLine(line_group, x1+right_shift, y1+30, x1+right_shift, y2);
+					// 水平線
+					renderArrow(line_group, x1+right_shift, y2, x2, y2);
+				}
 			}
 			else{
 				const x1 = fromRect.left + fromRect.width - canvasRect.left;
@@ -92,14 +108,39 @@ export function renderLines() {
 				const midX = (x1 + x2) / 2;
 				const midY = (y1 + y2) / 2;
 				
-				// 水平線
-				renderLine(line_group, x1, y1, x2, y1);
-				// 垂直線
-				renderArrow(line_group, x2, y1, x2, y2);
+				if(y1 < y2) {
+					if(x1 < x2){
+						// 水平線
+						renderLine(line_group, x1, y1, x2, y1);
+						// 垂直線
+						renderArrow(line_group, x2, y1, x2, y2);
+					}
+					else{
+						// すこし右
+						renderLine(line_group, x1, y1, x1+30, y1);
+						// 垂直線
+						renderLine(line_group, x1+30, y1, x1+30, midY);
+						// 水平線
+						renderLine(line_group, x1+30, midY, x2, midY);
+						// 矢印付きの垂直線
+						renderArrow(line_group, x2, midY, x2, y2);
+					}
+				}
+				else{
+					// すこし右
+					renderLine(line_group, x1, y1, x1+30, y1);
+					// 垂直線 少し上まで
+					renderLine(line_group, x1+30, y1, x1+30, y2-30);
+					// 水平線
+					renderLine(line_group, x1+30, y2-30, x2, y2-30);
+					// 矢印付きの垂直線
+					renderArrow(line_group, x2, y2-30, x2, y2);
+				}
+				
 			}
 			
 		}
-		// No意外のノードから他の線に線を引くときは、右側を回って書く
+		// No以外のノードから他の線に線を引くときは、迂回して書く
 		else if(toEl.classList.contains("line-group")){
 			// console.log("node to line-group");
 
@@ -109,26 +150,48 @@ export function renderLines() {
 			const y2 = toRect.top + toRect.height / 2 - canvasRect.top;
 			const midX = (x1 + x2) / 2;
 			const midY = (y1 + y2) / 2;
-			// // 垂直線
-			// renderLine(line_group, x1, y1, x1, midY);
-			// // 水平線
-			// renderLine(line_group, x1, midY, x2, midY);
-			// // 矢印付きの垂直線
-			// renderArrow(line_group, x2, midY, x2, y2);
 
-			// 右に線をずらす幅
+			// 線をずらす幅
 			const right_shift = 100;
-			
-			// 下に少し降りる
-			renderLine(line_group, x1, y1, x1, y1+30);
-			// 水平線
-			renderLine(line_group, x1, y1+30, x1+right_shift, y1+30);
-			// 垂直線
-			renderLine(line_group, x1+right_shift, y1+30, x1+right_shift, y2);
-			// 水平線
-			renderArrow(line_group, x1+right_shift, y2, x2, y2);
+
+			if(y1 < y2) {
+				if(x1 < x2){
+					// 下に降りる
+					renderLine(line_group, x1, y1, x1, y2);
+					// 水平線
+					renderArrow(line_group, x1, y2, x2, y2);
+				}
+				else{
+					// 垂直線
+					renderLine(line_group, x1, y1, x1, y2);
+					// 水平線
+					renderArrow(line_group, x1, y2, x2, y2);
+				}
+			}
+			else{
+				if(x1 < x2){
+					// 下に少し降りる
+					renderLine(line_group, x1, y1, x1, y1+30);
+					// 水平線
+					renderLine(line_group, x1, y1+30, x1+right_shift, y1+30);
+					// 垂直線
+					renderLine(line_group, x1+right_shift, y1+30, x1+right_shift, y2);
+					// 水平線
+					renderArrow(line_group, x1+right_shift, y2, x2, y2);
+				}
+				else{
+					// 下に少し降りる
+					renderLine(line_group, x1, y1, x1, y1+30);
+					// 水平線
+					renderLine(line_group, x1, y1+30, x1+right_shift, y1+30);
+					// 垂直線
+					renderLine(line_group, x1+right_shift, y1+30, x1+right_shift, y2);
+					// 水平線
+					renderArrow(line_group, x1+right_shift, y2, x2, y2);
+				}
+			}
 		}
-		// その他のノードは縦方向の階段状になるよう線を引く
+		// その他のノード（下to上）は縦方向の階段状になるよう線を引く
 		else{
 			const x1 = fromRect.left + fromRect.width / 2 - canvasRect.left;
 			const y1 = fromRect.top + fromRect.height - canvasRect.top;
@@ -136,12 +199,29 @@ export function renderLines() {
 			const y2 = toRect.top - canvasRect.top;
 			const midX = (x1 + x2) / 2;
 			const midY = (y1 + y2) / 2;
-			// 垂直線
-			renderLine(line_group, x1, y1, x1, midY);
-			// 水平線
-			renderLine(line_group, x1, midY, x2, midY);
-			// 矢印付きの垂直線
-			renderArrow(line_group, x2, midY, x2, y2);
+
+			if(y1 < y2) {
+				// 垂直線
+				renderLine(line_group, x1, y1, x1, midY);
+				// 水平線
+				renderLine(line_group, x1, midY, x2, midY);
+				// 矢印付きの垂直線
+				renderArrow(line_group, x2, midY, x2, y2);
+			}
+			if(y1 > y2) {
+				// 下に少し降りる
+				renderLine(line_group, x1, y1, x1, y1+30);
+				// 水平線
+				renderLine(line_group, x1, y1+30, midX, y1+30);
+				// 垂直線 少し上まで
+				renderLine(line_group, midX, y1+30, midX, y2-30);
+				// 水平線
+				renderLine(line_group, midX, y2-30, x2, y2-30);
+				
+				// 矢印付きの垂直線
+				renderArrow(line_group, x2, y2-30, x2, y2);
+			}
+			
 		}
         
 
