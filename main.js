@@ -5,7 +5,7 @@ import { showModal } from "./modal.js";
 import { process_kinds, decision_kinds, loop_start_kinds } from "./data/nodeKinds.js";
 import { stageInit } from "./stage/stage_main.js";
 import { random } from "./random.js";
-import { loadHistory } from "./history.js";
+import { loadHistory, clearHistory } from "./history.js";
 import { state } from "./var.js";
 import { Node } from "./class.js";
 import { renderLines } from "./renderLines.js";
@@ -183,8 +183,8 @@ document.getElementById("setup")
         // ノードとエッジを初期化
         state.nodes = [];
         state.edges = [];
-        localStorage.removeItem("state"); // 履歴を削除
-        localStorage.removeItem("dom"); // DOMを削除
+        clearHistory("state"); // 履歴を削除
+        clearHistory("dom"); // DOMを削除
         document.getElementById("canvas").innerHTML = ""; // DOMをクリア
 
         // リロード
