@@ -67,6 +67,11 @@ async function run(speed=100) {
 
     stopFlg = false; // 実行を停止するフラグをリセット
     runtime.state = "running"; // 実行状態をリセット
+    // すべての.node-emphasis クラスを削除
+    const emphasizedNodes = document.querySelectorAll('.node-emphasis');
+    emphasizedNodes.forEach(shape => {
+        shape.classList.remove("node-emphasis");
+    });
 
 
     async function eatToken(fromId){
@@ -179,12 +184,27 @@ async function run(speed=100) {
             if (top.remaining > 0) {
                  // 強調表示を解除する
                 nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
+
+                // ループエンドブロックを強調表示する
+                nextNodeDom.querySelector(".shape").classList.add("node-emphasis");
+                await wait(speed);
+                // 強調表示を解除する
+                nextNodeDom.querySelector(".shape").classList.remove("node-emphasis");
+
                 eatToken(top.fromId); // ループ先頭に戻る
-            } else {
+            }
+            else {
                 loop_stack.pop(); // ループ終了
                 const fromId = nextNodeDom.querySelector('.from-point').dataset.id;
-                 // 強調表示を解除する
+                // 強調表示を解除する
                 nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
+
+                // ループエンドブロックを強調表示する
+                nextNodeDom.querySelector(".shape").classList.add("node-emphasis");
+                await wait(speed);
+                // 強調表示を解除する
+                nextNodeDom.querySelector(".shape").classList.remove("node-emphasis");
+
                 eatToken(fromId); // ループ終了後のノードへ進む
             }
         }

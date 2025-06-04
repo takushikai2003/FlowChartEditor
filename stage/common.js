@@ -23,6 +23,16 @@ export function drawGrid() {
     ctx.closePath();
 }
 
+// // x1,y1の中心からx2,y2の中心までの線を描画する関数
+// export function drawLine(x1, y1, x2, y2) {
+//     ctx.beginPath();
+//     ctx.moveTo(x1 * gridSize + gridSize / 2, (6 - y1) * gridSize + gridSize / 2);
+//     ctx.lineTo(x2 * gridSize + gridSize / 2, (6 - y2) * gridSize + gridSize / 2);
+//     ctx.strokeStyle = '#000';
+//     ctx.lineWidth = 2;
+//     ctx.stroke();
+//     ctx.closePath();
+// }
 
 // 左下を0,0として、右上を6,6とする座標系で色を塗りつぶす関数
 export function fillCell(x, y, color) {

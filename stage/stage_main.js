@@ -50,6 +50,7 @@ function imageLoad(src) {
 
 const charaImage = await imageLoad('./images/chara.png');
 const goalImage = await imageLoad('./images/goal.png');
+const startImage = await imageLoad('./images/start.png');
 const wallImage = await imageLoad('./images/wall.png');
 const questionImage = await imageLoad('./images/question.png');
 
@@ -125,6 +126,8 @@ function drawStage(hide=true) {
 
     // ゴール位置を描画
     drawImageInCell(goal.x, goal.y, goalImage);
+    // スタート位置描画
+    drawImageInCell(start.x, start.y, startImage);
     
     // キャラ位置を描画
     drawImageInCell(chara_now.x, chara_now.y, charaImage);
