@@ -1,5 +1,6 @@
 import { walls, start, goal } from '../data/question.js';
 import { drawGrid, fillCell, drawImageInCell, drawCircle, drawCross } from './common.js';
+import { runtime } from '../runtime/runtime.js';
 
 const chara_now = { x: start.x, y: start.y }; // 現在のキャラクター位置
 
@@ -51,6 +52,7 @@ drawStage();
 function onFailure() {
     console.error("失敗しました。");
     drawCross(); // 失敗時に青のバツを描画
+    runtime.stop(); // ランタイムを停止
 }
 
 // 成功したときに呼ばれる関数
@@ -58,6 +60,7 @@ function onSuccess() {
     console.log("成功しました！");
     // ここに成功時の処理を追加
     drawCircle(); // 成功時に赤い丸を描画
+    runtime.stop(); // ランタイムを停止
 }
 
 // 座標に壁があるかどうかをチェックする関数

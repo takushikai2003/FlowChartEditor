@@ -1,6 +1,6 @@
 import { addNode } from "./addNode.js";
 import { saveFile, loadFile } from "./fileMagager.js";
-import { run } from "./runtime/runtime.js";
+import { runtime } from "./runtime/runtime.js";
 import { showModal } from "./modal.js";
 import { process_kinds, decision_kinds, loop_start_kinds } from "./data/nodeKinds.js";
 import { stageInit } from "./stage/stage_main.js";
@@ -134,12 +134,7 @@ document.getElementById("run_start")
 .addEventListener("click", async () => {
     stageInit(); // ステージを初期化
 
-    const res = await run(speed);
-    if (res) {
-        console.log("実行が完了しました。");
-    } else {
-        console.error("実行中にエラーが発生しました。");
-    }
+    runtime.run(speed);
 });
 
 // document.getElementById("save_file")

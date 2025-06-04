@@ -2,9 +2,22 @@
 import { state } from '../var.js';
 import { showModal } from '../modal.js';
 
+export const runtime ={
+    run: run,
+    stop: stop,
+    state: "running"
+}
+
+let stopFlg = false; // 実行を停止するフラグ
+function stop() {
+    stopFlg = true;
+    console.log("実行を停止しました。");
+}
+
+
 // speed: 1ステップにかかる時間(ms)
 // 0の場合は、すぐに実行する
-export async function run(speed=100) {
+async function run(speed=100) {
     // まずはstateをコピーしておく(state.edgeを削除するため)
     // state.nodesはfnの情報を持っているので、そこから必要な情報を取得する
     const state_copy = JSON.parse(JSON.stringify(state));
@@ -20,6 +33,9 @@ export async function run(speed=100) {
 
     let success = false;
 
+    stopFlg = false; // 実行を停止するフラグをリセット
+    runtime.state = "running"; // 実行状態をリセット
+
 
     async function eatToken(fromId){
         const edge = state_copy.edges.find(edge => edge.from === fromId);
@@ -31,14 +47,17 @@ export async function run(speed=100) {
         //     state_copy.edges.splice(edgeIndex, 1);
         // }
 
+
         // console.log(edge.to);
         const nowNodeDom = getNodeDomByfromId(fromId); // そのエッジのfromポイントを探す
         const nowNode = state.nodes.find(node => node.id === nowNodeDom.dataset.id);
         // 実行中のノードを強調表示する
         nowNodeDom.querySelector(".shape").classList.add("node-emphasis");
         await wait(speed);
-        // 強調表示を解除する
-        nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
+        if(stopFlg) {
+            runtime.state = "stopped"; // 実行状態を停止に変更
+            return false; // 実行を停止する
+        }
 
 
         const nextNodeDom = getNodeDomBytoId(edge.to); // そのエッジのtoポイントを探す
@@ -47,7 +66,8 @@ export async function run(speed=100) {
 
         if(nextNode.type === 'start'){
             console.error("Start node reached, this should not happen.");
-            return null;
+            runtime.state = "failed"; // 実行状態を失敗に変更
+            return false; // 開始ノードに戻ることはないはずなので、エラーを返す
         }
         else if(nextNode.type === 'end'){
             console.log("End node reached.");
@@ -69,16 +89,23 @@ export async function run(speed=100) {
             }
 
             console.log("実行が終了しました。");
-            // 強調表示する
-            nowNodeDom.querySelector(".shape").classList.add("node-emphasis");
-            await wait(speed);
-            // 強調表示を解除する
+
+             // 強調表示を解除する
             nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
 
+            // 次のノードを強調表示する
+            nextNodeDom.querySelector(".shape").classList.add("node-emphasis");
+            await wait(speed);
+            // 強調表示を解除する
+            nextNodeDom.querySelector(".shape").classList.remove("node-emphasis");
+
             if (syntactError) {
+                runtime.state = "failed"; // 実行状態を失敗に変更
                 return false;
             }
             success = true;
+
+            // 実行が成功した場合の処理
             return true;
         }
         // else if(nextNode.type === 'io') {
@@ -105,6 +132,8 @@ export async function run(speed=100) {
             else{
                 console.error("No function found for process node:", nextNode.id);
             }
+            // 強調表示を解除する
+            nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
             eatToken(fromId);
         }
         else if(nextNode.type === 'loop_start') {
@@ -112,6 +141,8 @@ export async function run(speed=100) {
             const fromId = nextNodeDom.querySelector('.from-point').dataset.id;
             loop_stack.push({ remaining: nextNode.data.loop_count, fromId: fromId });
 
+            // 強調表示を解除する
+            nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
             eatToken(fromId);
         }
         else if(nextNode.type === 'loop_end') {
@@ -122,10 +153,14 @@ export async function run(speed=100) {
             const top = loop_stack[loop_stack.length - 1];
             top.remaining -= 1;
             if (top.remaining > 0) {
+                 // 強調表示を解除する
+                nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
                 eatToken(top.fromId); // ループ先頭に戻る
             } else {
                 loop_stack.pop(); // ループ終了
                 const fromId = nextNodeDom.querySelector('.from-point').dataset.id;
+                 // 強調表示を解除する
+                nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
                 eatToken(fromId); // ループ終了後のノードへ進む
             }
         }
@@ -156,6 +191,8 @@ export async function run(speed=100) {
             :
             nextNodeDom.querySelector('.from-point-no').dataset.id;
 
+             // 強調表示を解除する
+            nowNodeDom.querySelector(".shape").classList.remove("node-emphasis");
             eatToken(fromId);
         }
         else {

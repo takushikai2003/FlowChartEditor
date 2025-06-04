@@ -6,6 +6,8 @@ const gridSize = 100;
 export function drawGrid() {
     // まずはキャンバスをクリア
     ctx.clearRect(0, 0, stage_canvas.width, stage_canvas.height);
+    // パスをリセット
+    ctx.beginPath();
     // 7×7のグリッドを描画
     for (let x = 0; x <= stage_canvas.width; x += gridSize) {
         ctx.moveTo(x, 0);
@@ -18,6 +20,7 @@ export function drawGrid() {
     ctx.strokeStyle = '#ccc';
     ctx.lineWidth = 1;
     ctx.stroke();
+    ctx.closePath();
 }
 
 
@@ -40,12 +43,15 @@ export function drawCircle() {
     const centerY = stage_canvas.height / 2;
     const radius = Math.min(stage_canvas.width, stage_canvas.height) * 0.35; // 70%の大きさ
 
+    ctx.save();
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
     ctx.lineWidth = 10;
     ctx.strokeStyle = 'red';
     ctx.stroke();
     ctx.closePath();
+    ctx.restore();
+
 }
 
 // canvas全体に大きく太さ10での青のバツを描く関数（canvasの70%の大きさ）
@@ -54,6 +60,7 @@ export function drawCross() {
     const centerY = stage_canvas.height / 2;
     const size = Math.min(stage_canvas.width, stage_canvas.height) * 0.35; // 70%の大きさ
 
+    ctx.save();
     ctx.beginPath();
     ctx.moveTo(centerX - size, centerY - size);
     ctx.lineTo(centerX + size, centerY + size);
@@ -63,6 +70,7 @@ export function drawCross() {
     ctx.strokeStyle = 'blue';
     ctx.stroke();
     ctx.closePath();
+    ctx.restore();
 }
 
 
