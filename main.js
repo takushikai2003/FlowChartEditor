@@ -4,6 +4,7 @@ import { runtime } from "./runtime/runtime.js";
 import { showModal } from "./modal.js";
 import { process_kinds, decision_kinds, loop_start_kinds } from "./data/nodeKinds.js";
 import { stageInit } from "./stage/stage_main.js";
+import { random } from "./random.js";
 
 
 
@@ -183,8 +184,3 @@ document.getElementById("speed")
 // 開始・終了ノードは自動的に追加
 addNode('start', 100, 30);
 addNode('end', 100, 500);
-
-
-function random(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}

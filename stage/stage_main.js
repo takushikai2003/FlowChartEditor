@@ -1,6 +1,7 @@
-import { walls, start, goal } from '../data/question_1.js';
+import { walls, start, goal, isMaze, mazes } from '../data/question_1.js';
 import { drawGrid, fillCell, drawImageInCell, drawCircle, drawCross } from './common.js';
 import { runtime } from '../runtime/runtime.js';
+import { random } from '../random.js';
 
 const chara_now = { x: start.x, y: start.y }; // 現在のキャラクター位置
 
@@ -16,24 +17,74 @@ function imageLoad(src) {
 const charaImage = await imageLoad('./images/chara.png');
 const goalImage = await imageLoad('./images/goal.png');
 const wallImage = await imageLoad('./images/wall.png');
+const questionImage = await imageLoad('./images/question.png');
+
+let selectedMaze;
 
 export function stageInit() {
     // キャラクターの初期位置を設定
     chara_now.x = start.x;
     chara_now.y = start.y;
+
+    if(isMaze){
+        // mazesからランダムに壁を選択
+        const mazeIndex = random(0, mazes.length - 1);
+        selectedMaze = mazes[mazeIndex];
+    }
     // ステージを初期化
     drawStage();
 }
 
-function drawStage() {
+
+function drawStage(hide=true) {
     // グリッドを描画
     drawGrid();
 
-    // 壁を描画
-    for (let y = 0; y < walls.length; y++) {
-        for (let x = 0; x < walls[y].length; x++) {
-            if (walls[y][x]) {
-                drawImageInCell(x, y, wallImage); 
+    if(isMaze){
+        if(hide){
+            // 内部を隠して壁を描画
+            for (let y = 0; y < selectedMaze.length; y++) {
+                for (let x = 0; x < selectedMaze[y].length; x++) {
+                    // 外周の壁を描画
+                    if(selectedMaze[y][x] &&
+                        (x == 0 || y == 0 || x == selectedMaze[y].length - 1 || y == selectedMaze.length - 1)
+                    ){
+                        drawImageInCell(x, y, wallImage); 
+                    }
+                    // キャラとゴールの位置は壁を描画しない
+                    else if (x === chara_now.x && y === chara_now.y) {
+                        drawImageInCell(x, y, charaImage); // スタート位置にキャラを描画
+                    }
+                    else if (x === goal.x && y === goal.y) {
+                        drawImageInCell(x, y, goalImage); // ゴール位置にゴールを描画
+                    }
+                    else {
+                        drawImageInCell(x, y, questionImage); // ?を描画
+                    }
+                }
+            }
+        }
+
+        else{
+            // 内部を隠さずに壁を描画
+            for (let y = 0; y < selectedMaze.length; y++) {
+                for (let x = 0; x < selectedMaze[y].length; x++) {
+                    if (selectedMaze[y][x]) {
+                        drawImageInCell(x, y, wallImage); 
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    else{
+        // 壁を描画
+        for (let y = 0; y < walls.length; y++) {
+            for (let x = 0; x < walls[y].length; x++) {
+                if (walls[y][x]) {
+                    drawImageInCell(x, y, wallImage); 
+                }
             }
         }
     }
@@ -45,12 +96,16 @@ function drawStage() {
     drawImageInCell(chara_now.x, chara_now.y, charaImage);
 }
 
-drawStage();
+stageInit(); // ステージを初期化
 
 
 // 失敗したときに呼ばれる関数
 function onFailure() {
     console.error("失敗しました。");
+    if(isMaze){
+        drawStage(false); // 壁を隠さずに描画
+    }
+    
     drawCross(); // 失敗時に青のバツを描画
     runtime.stop(); // ランタイムを停止
 }
@@ -58,7 +113,10 @@ function onFailure() {
 // 成功したときに呼ばれる関数
 function onSuccess() {
     console.log("成功しました！");
-    // ここに成功時の処理を追加
+    if(isMaze){
+        drawStage(false); // 壁を隠さずに描画
+    }
+    
     drawCircle(); // 成功時に赤い丸を描画
     runtime.stop(); // ランタイムを停止
 }

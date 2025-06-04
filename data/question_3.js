@@ -19,8 +19,24 @@ const maze1 = [
     [true, true, true, true, true, true, true]
 ];//7*7
 
-const maze2 = [];
-const maze3 = [];
+const maze2 = [
+    [true, true, true, true, true, true, true],
+    [true, false, true, false, true, true, true],
+    [true, false, true, false, false, false, true],
+    [true, false, true, false, true, false, true],
+    [true, true, true, true, false, false, true],
+    [true, true, true, true, true, false, true],
+    [true, true, true, true, true, true, true]
+];
+const maze3 = [
+    [true, true, true, true, true, true, true],
+    [true, false, true, false, true, false, true],
+    [true, false, true, false, false, false, true],
+    [true, false, false, false, true, false, true],
+    [true, true, true, true, true, false, true],
+    [true, true, true, true, true, false, true],
+    [true, true, true, true, true, true, true]
+];
 
 
 export const isMaze = true; // 迷路かどうか

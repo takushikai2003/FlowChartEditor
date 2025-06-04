@@ -13,4 +13,4 @@ export const start = { x: 1, y: 1 }; // スタート位置
 export const goal = { x: 3, y: 4 }; // ゴール位置
 
 export const isMaze = false; // 迷路かどうか
-export const maze = []; // 迷路データは空（迷路ではないため）
+export const mazes = []; // 迷路データは空（迷路ではないため）
