@@ -12,7 +12,9 @@ import { renderLines } from "./renderLines.js";
 
 const initialState = loadHistory("state");
 const initialDom = loadHistory("dom");
+
 console.log("history:", initialState);
+
 // console.log("dom:", initialDom);
 if (initialState.nodes || initialState.edges) {
     // まずdomを復元
@@ -28,7 +30,52 @@ if (initialState.nodes || initialState.edges) {
 
         // ノードを追加
         const newNode = new Node(node.id, node.type, node.label, node.x, node.y, nodeEl);
-        // newNode.setData("fn", node.fn);
+        newNode.data = node.data || {}; // データを復元
+        console.log(node.data)
+
+        switch (node.type) {
+            case "process":
+                newNode.el.addEventListener("dblclick", () => { onProcessNodeDblClick(newNode); });
+                break;
+            case "decision":
+                newNode.el.addEventListener("dblclick", () => { onDecisionNodeDblClick(newNode); });
+                break;
+            case "loop_start":
+                newNode.el.addEventListener("dblclick", () => { onLoopStartNodeDblClick(newNode); });
+                console.log("loop_count:", newNode.getData("loop_count"));
+                switch (newNode.getData("loop_count")) {
+                    case 1:
+                        newNode.updateLabel("1回ループ");
+                        break;
+                    case 2:
+                        newNode.updateLabel("2回ループ");
+                        break;
+                    case 3:
+                        newNode.updateLabel("3回ループ");
+                        break;
+                    case 4:
+                        newNode.updateLabel("4回ループ");
+                        break;
+                    case 5:
+                        newNode.updateLabel("5回ループ");
+                        break;
+                    case 1000:
+                        newNode.updateLabel("ずっとループ");
+                        break;
+
+                    default:
+                        console.warn("不明なループ回数:", newNode.getData("loop_count"));
+                        break;
+                }
+
+                break;
+            case "loop_end":
+                // ループ終了ノードは特にイベントはない
+                break;
+            default:
+                // 他のノードタイプは特にイベントはない
+                break;
+        }
 
         state.nodes.push(newNode);
     }
@@ -54,6 +101,8 @@ let speed = 500; // 実行速度(ms)
 // document.getElementById("add_io")
 // .addEventListener("click", () => addNode('io'));
 
+
+
 // 処理ノード
 document.getElementById("add_process")
 .addEventListener("click", () => {
@@ -61,37 +110,9 @@ document.getElementById("add_process")
     // nodeの初期値を設定
     const defaultProcess = process_kinds.find(kind => kind.default);
     node.updateLabel(defaultProcess.label);
-    node.setData("fn", defaultProcess.fn);
+    node.setData("fnName", defaultProcess.fnName);
 
-    
-    node.el.addEventListener("dblclick",async  () => {
-        const pr = document.createElement("div");
-        const select = document.createElement("select");
-        select.classList.add("modal-select");
-
-        process_kinds.forEach(kind => {
-            const option = document.createElement("option");
-            option.value = kind.label;
-            option.textContent = kind.label;
-            option.selected = node.label === kind.label; // 初期選択
-            select.appendChild(option);
-        });
-
-        pr.appendChild(select);
-
-        select.addEventListener("change", () => {
-            node.updateLabel(select.value);
-            const selectedKind = process_kinds.find(kind => kind.label === select.value);
-            if (selectedKind) {
-                node.setData("fn", selectedKind.fn);
-            }
-            else {
-                console.error("選択された処理が見つかりません:", select.value);
-            }
-        });
-
-        await showModal("処理の内容", pr);
-    });
+    node.el.addEventListener("dblclick", ()=>{onProcessNodeDblClick(node);});
 });
 
 // 分岐ノード
@@ -101,72 +122,21 @@ document.getElementById("add_decision")
     // nodeの初期値を設定
     const defaultDecision = decision_kinds.find(kind => kind.default);
     node.updateLabel(defaultDecision.label);
-    node.setData("fn", defaultDecision.fn);
+    node.setData("fnName", defaultDecision.fnName);
 
-
-    node.el.addEventListener("dblclick",async  () => {
-        const pr = document.createElement("div");
-        const select = document.createElement("select");
-        select.classList.add("modal-select");
-
-        decision_kinds.forEach(kind => {
-            const option = document.createElement("option");
-            option.value = kind.label;
-            option.textContent = kind.label;
-            option.selected = node.label === kind.label; // 初期選択
-            select.appendChild(option);
-        });
-
-        pr.appendChild(select);
-
-        select.addEventListener("change", () => {
-            node.updateLabel(select.value);
-            const selectedKind = decision_kinds.find(kind => kind.label === select.value);
-            if (selectedKind) {
-                node.setData("fn", selectedKind.fn);
-            }
-            else {
-                console.error("選択された分岐が見つかりません:", select.value);
-            }
-        });
-
-        await showModal("分岐条件", pr);
-    });
-
+    node.el.addEventListener("dblclick", ()=>{onDecisionNodeDblClick(node);});
 });
 
 // ループ開始ノード
 document.getElementById("add_loop_start")
 .addEventListener("click", () => {
     const node = addNode('loop_start', 100+ random(0, 50), 100 + random(0, 50));
-    node.el.addEventListener("dblclick",async  () => {
-        const pr = document.createElement("div");
-        const select = document.createElement("select");
-        select.classList.add("modal-select");
-
-        loop_start_kinds.forEach(kind => {
-            const option = document.createElement("option");
-            option.value = kind.value;
-            option.textContent = kind.label;
-            option.selected = node.label === kind.label; // 初期選択
-            select.appendChild(option);
-        });
-
-        pr.appendChild(select);
-        select.addEventListener("change", () => {
-            // 選択されたループ回数をラベルに設定
-            node.updateLabel(select.options[select.selectedIndex].textContent);
-
-            // ノードのデータにループ回数を保存
-            node.setData("loop_count", Number(select.value));
-            // console.log("ループ回数:", node.getData("loop_count"));
-        });
-
-        await showModal("ループ回数", pr);
-    });
+    node.el.addEventListener("dblclick", () => {onLoopStartNodeDblClick(node);});
 });
 document.getElementById("add_loop_end")
 .addEventListener("click", () => addNode('loop_end', 100+ random(0, 50), 100 + random(0, 50)));
+
+
 
 document.getElementById("run_start")
 .addEventListener("click", async () => {
@@ -239,7 +209,6 @@ document.getElementById("setup")
         // ノードとエッジを初期化
         state.nodes = [];
         state.edges = [];
-        renderLines(); // エッジを再描画
         localStorage.removeItem("state"); // 履歴を削除
         localStorage.removeItem("dom"); // DOMを削除
         document.getElementById("canvas").innerHTML = ""; // DOMをクリア
@@ -255,3 +224,92 @@ document.getElementById("setup")
 });
 
 
+async function onProcessNodeDblClick(node) {
+    const pr = document.createElement("div");
+    const select = document.createElement("select");
+    select.classList.add("modal-select");
+
+    process_kinds.forEach(kind => {
+        const option = document.createElement("option");
+        option.value = kind.label;
+        option.textContent = kind.label;
+        option.selected = node.label === kind.label; // 初期選択
+        select.appendChild(option);
+    });
+
+    pr.appendChild(select);
+
+    select.addEventListener("change", () => {
+        node.updateLabel(select.value);
+        const selectedKind = process_kinds.find(kind => kind.label === select.value);
+        if (selectedKind) {
+            node.setData("fnName", selectedKind.fnName);
+        }
+        else {
+            console.error("選択された処理が見つかりません:", select.value);
+        }
+    });
+
+    await showModal("処理の内容", pr);
+    renderLines(); // ラベル変更後に線を再描画
+}
+
+
+async function onDecisionNodeDblClick(node) {
+    const pr = document.createElement("div");
+    const select = document.createElement("select");
+    select.classList.add("modal-select");
+
+    decision_kinds.forEach(kind => {
+        const option = document.createElement("option");
+        option.value = kind.label;
+        option.textContent = kind.label;
+        option.selected = node.label === kind.label; // 初期選択
+        select.appendChild(option);
+    });
+
+    pr.appendChild(select);
+
+    select.addEventListener("change", () => {
+        node.updateLabel(select.value);
+        const selectedKind = decision_kinds.find(kind => kind.label === select.value);
+        if (selectedKind) {
+            node.setData("fnName", selectedKind.fnName);
+        }
+        else {
+            console.error("選択された分岐が見つかりません:", select.value);
+        }
+    });
+
+    await showModal("分岐条件", pr);
+    renderLines(); // ラベル変更後に線を再描画
+}
+
+
+async function onLoopStartNodeDblClick(node) {
+    const pr = document.createElement("div");
+    const select = document.createElement("select");
+    select.classList.add("modal-select");
+
+    loop_start_kinds.forEach(kind => {
+        const option = document.createElement("option");
+        option.value = kind.value;
+        option.textContent = kind.label;
+        option.selected = node.label === kind.label; // 初期選択
+        select.appendChild(option);
+    });
+
+    pr.appendChild(select);
+    select.addEventListener("change", () => {
+        // 選択されたループ回数をラベルに設定
+        node.updateLabel(select.options[select.selectedIndex].textContent);
+
+        // ノードのデータにループ回数を保存
+        node.setData("loop_count", Number(select.value));
+        // console.log(state);
+        // console.log("ループ回数:", node.getData("loop_count"));
+    });
+
+    await showModal("ループ回数", pr);
+    renderLines(); // ラベル変更後に線を再描画
+}

@@ -1,6 +1,7 @@
 'use strict';
 import { state } from '../var.js';
 import { showModal } from '../modal.js';
+import { moveUp, moveDown, moveRight, moveLeft, isWallUp, isWallDown, isWallRight, isWallLeft } from "../stage/stage_main.js";
 
 export const runtime ={
     run: run,
@@ -15,11 +16,42 @@ function stop() {
 }
 
 
+function nodeFunctionRunner(fnName) {
+    // ノードの関数を実行する
+    switch(fnName) {
+        case 'moveUp':
+            moveUp();
+            break;
+        case 'moveDown':
+            moveDown();
+            break;
+        case 'moveRight':
+            moveRight();
+            break;
+        case 'moveLeft':
+            moveLeft();
+            break;
+        case 'isWallUp':
+            return isWallUp();
+        case 'isWallDown':
+            return isWallDown();
+        case 'isWallRight':
+            return isWallRight();
+        case 'isWallLeft':
+            return isWallLeft();
+        default:
+            console.error(`Unknown function name: ${fnName}`);
+            return false; // デフォルトはfalseを返す
+    }
+}
+
+
+
 // speed: 1ステップにかかる時間(ms)
 // 0の場合は、すぐに実行する
 async function run(speed=100) {
     // まずはstateをコピーしておく(state.edgeを削除するため)
-    // state.nodesはfnの情報を持っているので、そこから必要な情報を取得する
+    // state.nodesはfnの名前情報を持っているので、そこから必要な情報を取得する
     const state_copy = JSON.parse(JSON.stringify(state));
 
     const loop_stack = [];
@@ -116,18 +148,10 @@ async function run(speed=100) {
         else if(nextNode.type === 'process') {
             // 処理ノードの場合は、fnを実行する
             const fromId = nextNodeDom.querySelector('.from-point').dataset.id;
-            if(nextNode?.data.fn){
+            if(nextNode?.data.fnName){
                 // fnがあれば実行する
-                const fn = nextNode.data.fn;
-                if (typeof fn === 'function') {
-                    try {
-                        fn();
-                    } catch (error) {
-                        console.error("Error executing function:", error);
-                    }
-                } else {
-                    console.warn("No function found for node:", nextNode.id);
-                }
+                const fnName = nextNode.data.fnName;
+                nodeFunctionRunner(fnName);
             }
             else{
                 console.error("No function found for process node:", nextNode.id);
@@ -168,18 +192,13 @@ async function run(speed=100) {
             // 分岐ノードの場合は、yes/noのエッジを処理する
             // 条件関数の実行
             let conditionResult;
-            if(nextNode?.data.fn){
+            if(nextNode?.data.fnName){
                 // fnがあれば実行する
-                const fn = nextNode.data.fn;
-                if (typeof fn === 'function') {
-                    try {
-                        conditionResult = fn();
-                    } catch (error) {
-                        console.error("Error executing function:", error);
-                    }
-                } else {
-                    console.warn("No function found for node:", nextNode.id);
-                }
+                const fnName = nextNode.data.fnName;
+                nodeFunctionRunner(fnName).then(result => {
+                    conditionResult = result;
+                    console.log(`条件関数 ${fnName} の結果:`, conditionResult);
+                });
             }
             else{
                 console.error("No function found for decision node:", nextNode.id);
