@@ -1,6 +1,7 @@
-import { walls as walls1, start as start1, goal as goal1, isMaze as isMaze1, mazes as mazes1 } from '../data/question_1.js';
-import { walls as walls2, start as start2, goal as goal2, isMaze as isMaze2, mazes as mazes2 } from '../data/question_2.js';
-import { walls as walls3, start as start3, goal as goal3, isMaze as isMaze3, mazes as mazes3 } from '../data/question_3.js';
+import { question as question1 } from '../data/question_1.js';
+import { question as question2 } from '../data/question_2.js';
+import { question as question3 } from '../data/question_3.js';
+import { question as question4 } from '../data/question_4.js';
 
 import { drawGrid, fillCell, drawImageInCell, drawCircle, drawCross } from './common.js';
 import { runtime } from '../runtime/runtime.js';
@@ -10,31 +11,19 @@ import { random } from '../random.js';
 const params = new URLSearchParams(document.location.search);
 const q_num = Number(params.get("q"));
 console.log("q_num:", q_num);
-let walls, start, goal, isMaze, mazes;
-if (q_num === 1) {
-    walls = walls1;
-    start = start1;
-    goal = goal1;
-    isMaze = isMaze1;
-    mazes = mazes1;
-} else if (q_num === 2) {
-    walls = walls2;
-    start = start2;
-    goal = goal2;
-    isMaze = isMaze2;
-    mazes = mazes2;
-} else if (q_num === 3) {
-    walls = walls3;
-    start = start3;
-    goal = goal3;
-    isMaze = isMaze3;
-    mazes = mazes3;
-}
-else{
-    console.error("q_numが不正です。1, 2, 3のいずれかを指定してください。");
-}
 
-
+const questions = [question1, question2, question3, question4];
+let walls, start, goal, isMaze, mazes, isRandom, goals, wallsList, instruction;
+// q_numに応じて問題を設定
+walls = questions[q_num-1].walls;
+isMaze = questions[q_num-1].isMaze;
+mazes = questions[q_num-1].mazes;
+start = questions[q_num-1].start;
+goal = questions[q_num-1].goal;
+isRandom = questions[q_num-1].isRandom;
+wallsList = questions[q_num-1].wallsList;
+goals = questions[q_num-1].goals;
+instruction = questions[q_num-1].instruction;
 
 
 const chara_now = { x: start.x, y: start.y }; // 現在のキャラクター位置
@@ -57,6 +46,9 @@ const questionImage = await imageLoad('./images/question.png');
 let selectedMaze;
 
 export function stageInit() {
+    const instructionElement = document.getElementById('stage_instruction');
+    instructionElement.innerHTML = instruction; // 問題の説明を表示
+    
     // キャラクターの初期位置を設定
     chara_now.x = start.x;
     chara_now.y = start.y;
@@ -66,6 +58,14 @@ export function stageInit() {
         const mazeIndex = random(0, mazes.length - 1);
         selectedMaze = mazes[mazeIndex];
     }
+    if(isRandom){
+        // ランダムな壁を選択
+        const wallsIndex = random(0, wallsList.length - 1);
+        walls = wallsList[wallsIndex];
+        // 対応するゴールを選択
+        goal = goals[wallsIndex];
+    }
+
     // ステージを初期化
     drawStage();
 }

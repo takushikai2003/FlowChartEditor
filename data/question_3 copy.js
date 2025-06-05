@@ -1,5 +1,5 @@
 // 1,1から4,4までの階段
-export const walls = [
+const walls = [
     [true, true, true, true, true, true, true],
     [true, false, true, false, true, true, true],
     [true, false, false, false, false, false, true],
@@ -39,9 +39,27 @@ const maze3 = [
 ];
 
 
-export const isMaze = true; // 迷路かどうか
+const isMaze = true; // 迷路かどうか
 
-export const mazes = [maze1, maze2, maze3];
+const mazes = [maze1, maze2, maze3];
 
-export const start = { x: 1, y: 1 }; // スタート位置
-export const goal = { x: 5, y: 5 }; // ゴール位置
+const start = { x: 1, y: 1 }; // スタート位置
+const goal = { x: 5, y: 5 }; // ゴール位置
+
+const isRandom = false; // ランダムな壁にするどうか
+const wallsList = []; // ランダムにする場合の壁の配列
+const goals = []; // ランダムにする場合のゴールの配列
+
+const instruction = "";
+
+export const question = {
+    walls: walls,
+    isMaze: isMaze,
+    mazes: mazes,
+    start: start,
+    goal: goal,
+    isRandom: isRandom,
+    wallsList: wallsList,
+    goals: goals,
+    instruction: instruction
+}

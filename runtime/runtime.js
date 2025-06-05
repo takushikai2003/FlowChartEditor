@@ -215,10 +215,7 @@ async function run(speed=100) {
             if(nextNode?.data.fnName){
                 // fnがあれば実行する
                 const fnName = nextNode.data.fnName;
-                nodeFunctionRunner(fnName).then(result => {
-                    conditionResult = result;
-                    console.log(`条件関数 ${fnName} の結果:`, conditionResult);
-                });
+                conditionResult = nodeFunctionRunner(fnName);
             }
             else{
                 console.error("No function found for decision node:", nextNode.id);
