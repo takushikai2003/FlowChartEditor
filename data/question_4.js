@@ -38,7 +38,7 @@ const isRandom = true; // ランダムな壁にするどうか
 const wallsList = [walls1, walls2]; // ランダムにする場合の壁の配列
 const goals = [{x:1,y:2},{x:2,y:1}]; // ランダムにする場合のゴールの配列
 
-const instruction = "ゴールが、上か右かランダムに決まります。";
+const instruction = "<h3>課題３</h3>ゴールが、上か右かランダムに決まります。選択を使って解いてみよう。";
 
 
 export const question = {

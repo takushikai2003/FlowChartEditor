@@ -19,7 +19,7 @@ const isRandom = false; // ランダムな壁にするどうか
 const wallsList = []; // ランダムにする場合の壁の配列
 const goals = []; // ランダムにする場合のゴールの配列
 
-const instruction = "";
+const instruction = "<h3>課題２</h3>反復を使って解いてみよう。";
 
 export const question = {
     walls: walls,

@@ -10,7 +10,7 @@ const walls = [
 ];//7*7
 
 const start = { x: 1, y: 1 }; // スタート位置
-const goal = { x: 3, y: 4 }; // ゴール位置
+const goal = { x: 2, y: 3 }; // ゴール位置
 
 const isMaze = false; // 迷路かどうか
 const mazes = []; // 迷路データは空（迷路ではないため）
@@ -19,7 +19,7 @@ const isRandom = false; // ランダムな壁にするどうか
 const wallsList = []; // ランダムにする場合の壁の配列
 const goals = []; // ランダムにする場合のゴールの配列
 
-const instruction = "";
+const instruction = "<h3>課題１</h3>複数の経路を試してみてください。";
 
 export const question = {
     walls: walls,

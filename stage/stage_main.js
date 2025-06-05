@@ -2,6 +2,7 @@ import { question as question1 } from '../data/question_1.js';
 import { question as question2 } from '../data/question_2.js';
 import { question as question3 } from '../data/question_3.js';
 import { question as question4 } from '../data/question_4.js';
+import { question as question5 } from '../data/question_5.js';
 
 import { drawGrid, fillCell, drawImageInCell, drawCircle, drawCross } from './common.js';
 import { runtime } from '../runtime/runtime.js';
@@ -12,7 +13,7 @@ const params = new URLSearchParams(document.location.search);
 const q_num = Number(params.get("q"));
 console.log("q_num:", q_num);
 
-const questions = [question1, question2, question3, question4];
+const questions = [question1, question2, question3, question4, question5];
 let walls, start, goal, isMaze, mazes, isRandom, goals, wallsList, instruction;
 // q_numに応じて問題を設定
 walls = questions[q_num-1].walls;
